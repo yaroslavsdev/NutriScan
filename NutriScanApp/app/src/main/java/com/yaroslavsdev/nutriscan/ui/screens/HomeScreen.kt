@@ -12,10 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.yaroslavsdev.nutriscan.ui.theme.NutriScanTheme
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -27,7 +29,7 @@ fun HomeScreen() {
         Spacer(Modifier.padding(16.dp))
 
         Button(
-            onClick = {}
+            onClick = { navController.navigate("scanner") }
         ) {
             Text("Сканировать товар")
         }
@@ -39,6 +41,6 @@ fun HomeScreen() {
 @Composable
 fun HomePreview() {
     NutriScanTheme {
-        HomeScreen()
+        HomeScreen(navController = rememberNavController())
     }
 }
