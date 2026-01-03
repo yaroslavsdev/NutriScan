@@ -61,4 +61,13 @@ dependencies {
     // Navigation Controller
     val nav_version = "2.9.6"
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    // CameraX
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.camera2)
+    implementation(libs.camerax.lifecycle)
+    implementation(libs.camerax.view)
+
+    // ML Kit
+    implementation(libs.mlkit.barcode)
 }

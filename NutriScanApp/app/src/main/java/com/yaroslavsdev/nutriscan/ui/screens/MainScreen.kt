@@ -24,7 +24,7 @@ fun HomeScreen(navController: NavHostController) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Здравствуйте, уважаемый пользователь")
+        Text("Здравствуйте, пользователь")
 
         Spacer(Modifier.padding(16.dp))
 
