@@ -21,9 +21,13 @@ fun ScanResultScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Штрих-код найден:")
+
         Spacer(Modifier.height(8.dp))
+
         Text(barcode)
+
         Spacer(Modifier.height(24.dp))
+
         Button(onClick = onScanAgain) {
             Text("Сканировать ещё")
         }
