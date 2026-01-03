@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.yaroslavsdev.nutriscan.navigation.BottomNavItem
 import com.yaroslavsdev.nutriscan.ui.screens.*
+import com.yaroslavsdev.nutriscan.ui.screens.scan.ScannerScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
