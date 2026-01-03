@@ -1,4 +1,4 @@
-name: Build NutriScan APK
+name: Build NutriScan Debug APK
 
 on:
   push:
@@ -38,11 +38,11 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
-      - name: Build release APK
-        run: ./gradlew :app:assembleRelease
+      - name: Build debug APK
+        run: ./gradlew :app:assembleDebug
 
-      - name: Upload APK artifact
+      - name: Upload debug APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: NutriScan-release-apk
-          path: app/build/outputs/apk/release/*.apk
+          name: NutriScan-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
