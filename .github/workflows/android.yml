@@ -1,4 +1,4 @@
-name: Build NutriScan APK
+name: Build & Sign NutriScan APK
 
 on:
   push:
@@ -28,8 +28,18 @@ jobs:
         run: ./gradlew assembleRelease
         working-directory: NutriScanApp
 
-      - name: Upload APK
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDirectory: NutriScanApp/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEYSTORE }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: NutriScan-Release
-          path: "**/build/outputs/apk/release/*.apk"
+          name: NutriScan-Signed
+          path: ${{ steps.sign_app.outputs.signedReleaseFile }}
