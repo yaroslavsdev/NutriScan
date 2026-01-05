@@ -22,12 +22,14 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+        working-directory: NutriScanApp
 
       - name: Build Release APK
         run: ./gradlew assembleRelease
+        working-directory: NutriScanApp
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: NutriScan-v${{ github.run_number }}
-          path: app/build/outputs/apk/release/*.apk
+          name: NutriScan-Release
+          path: "**/build/outputs/apk/release/*.apk"
