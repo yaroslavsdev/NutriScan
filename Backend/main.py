@@ -9,7 +9,6 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="NutriScan Simple API")
 
-
 # Схема для добавления товара (то, что присылает Android)
 class ProductCreate(BaseModel):
     barcode: str
