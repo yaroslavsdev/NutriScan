@@ -60,7 +60,7 @@ def get_all_products(db: Session = Depends(get_db)):
 
 
 # Удаление товара по штрихкоду (DELETE)
-@app.delete("/products/barcode/{barcode}")
+@app.delete("/products/{barcode}")
 def delete_product_by_barcode(barcode: str, db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(models.Product.barcode == barcode).first()
     if not product:
