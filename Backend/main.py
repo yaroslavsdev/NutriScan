@@ -9,17 +9,22 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="NutriScan Simple API")
 
-# Схема для добавления товара (то, что присылает Android)
+# Схема для добавления товара
 class ProductCreate(BaseModel):
     barcode: str
     name: str
     ingredients: str
     calories: float
 
+class ProductResponse(ProductCreate):
+    id: int
+
+    class Config:
+        from_attributes = True
 
 # --- ТОВАРЫ ---
 
-# 1. Добавить товар в базу (POST)
+# Добавить товар в базу (POST)
 @app.post("/products")
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     db_product = models.Product(
@@ -38,25 +43,28 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Товар с таким штрих-кодом уже есть")
 
 
-# 2. Найти товар по штрих-коду (GET)
-# Запись в историю
+# Поиск товара в базе (GET)
 @app.get("/products/{barcode}")
 def get_product(barcode: str, db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(models.Product.barcode == barcode).first()
     if not product:
         raise HTTPException(status_code=404, detail="Товар не найден")
-
-    # // УБРАТЬ ПЕРЕД ПРОДОМ //
-    # new_scan = models.ScanHistory(user_id=1, product_barcode=barcode)
-    # db.add(new_scan)
-    # db.commit()
-
     return product
 
 
-# 3. Получить всю историю сканирований (GET)
-@app.get("/history")
-def get_history(db: Session = Depends(get_db)):
-    # Возвращает все записи из таблицы истории, отсортированные по времени (сначала новые)
-    history = db.query(models.ScanHistory).order_by(models.ScanHistory.scan_time.desc()).all()
-    return history
+# Получение всего списка товаров (GET)
+@app.get("/products", response_model=list[ProductResponse])
+def get_all_products(db: Session = Depends(get_db)):
+    products = db.query(models.Product).all()
+    return products
+
+
+# Удаление товара по штрихкоду (DELETE)
+@app.delete("/products/barcode/{barcode}")
+def delete_product_by_barcode(barcode: str, db: Session = Depends(get_db)):
+    product = db.query(models.Product).filter(models.Product.barcode == barcode).first()
+    if not product:
+        raise HTTPException(status_code=404, detail=f"Товар со штрих-кодом {barcode} не найден")
+    db.delete(product)
+    db.commit()
+    return {"detail": f"Товар с штрих-кодом {barcode} успешно удален"}
