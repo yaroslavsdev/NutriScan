@@ -1,5 +1,6 @@
 package com.yaroslavsdev.nutriscan.ui.screens.history
 
+import HistoryCard
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -56,7 +57,7 @@ fun EmptyHistory() {
 fun HistoryList(state: CheckHistoryUiState) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp)
+        // contentPadding = PaddingValues(4.dp)
     ) {
         state.grouped.forEach { (date, items) ->
             item {
