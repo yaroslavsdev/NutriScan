@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.yaroslavsdev.nutriscan.ui.model.ScannedProductUi
 import java.time.format.DateTimeFormatter
 
@@ -16,7 +15,7 @@ fun HistoryCard(item: ScannedProductUi) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(bottom = 12.dp)
     ) {
         Column(Modifier.padding(12.dp)) {
             // Название

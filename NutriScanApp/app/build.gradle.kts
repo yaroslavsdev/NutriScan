@@ -59,7 +59,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     // Navigation Controller
-    val nav_version = "2.9.6"
+    val nav_version = "2.9.7"
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     // CameraX

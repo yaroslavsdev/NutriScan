@@ -21,10 +21,10 @@ fun HomeScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Здравствуйте, пользователь")
+        Text("Проверьте продукт, нажав кнопку")
 
         Spacer(Modifier.padding(16.dp))
 
