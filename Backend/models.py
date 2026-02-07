@@ -20,10 +20,17 @@ class Product(Base):
     __tablename__ = "products"
 
     id = Column(Integer, primary_key=True, index=True)
-    barcode = Column(String, unique=True, index=True)
-    name = Column(String)
+
+    barcode = Column(String, unique=True, index=True, nullable=False)
+    name = Column(String, nullable=False)
+    brand = Column(String, nullable=True)
+
     ingredients = Column(String)
+
     calories = Column(Float)
+    proteins = Column(Float)
+    fats = Column(Float)
+    carbs = Column(Float)
 
 
 # 3. Таблица истории сканирования

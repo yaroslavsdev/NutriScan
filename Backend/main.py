@@ -4,25 +4,42 @@ from pydantic import BaseModel
 import models
 from database import engine, get_db
 
-# Таблицы в Postgres, если их еще нет
+# Создание таблиц в Postgres, если их еще нет
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="NutriScan Simple API")
+app = FastAPI(title="NutriScan API")
 
-# Схема для добавления товара
+class Nutrition(BaseModel):
+    calories: float
+    proteins: float
+    fats: float
+    carbs: float
+
 class ProductCreate(BaseModel):
     barcode: str
     name: str
+    brand: str | None = None
     ingredients: str
-    calories: float
 
-class ProductResponse(ProductCreate):
+    nutrition: Nutrition
+
+
+class ProductResponse(BaseModel):
     id: int
+    barcode: str
+    name: str
+    brand: str | None
+    ingredients: str
+
+    calories: float
+    proteins: float
+    fats: float
+    carbs: float
 
     class Config:
         from_attributes = True
 
-# --- ТОВАРЫ ---
+
 
 # Добавить товар в базу (POST)
 @app.post("/products")
@@ -30,9 +47,15 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     db_product = models.Product(
         barcode=product.barcode,
         name=product.name,
+        brand=product.brand,
         ingredients=product.ingredients,
-        calories=product.calories
+
+        calories=product.nutrition.calories,
+        proteins=product.nutrition.proteins,
+        fats=product.nutrition.fats,
+        carbs=product.nutrition.carbs,
     )
+
     db.add(db_product)
     try:
         db.commit()
