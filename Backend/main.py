@@ -1,4 +1,6 @@
-from fastapi import FastAPI, Depends, HTTPException
+import json
+
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 import models
@@ -65,6 +67,41 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=400, detail="Товар с таким штрих-кодом уже есть")
 
+@app.post("/products/import")
+def import_products(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+    data = json.load(file.file)
+
+    added = 0
+
+    for item in data:
+        exists = db.query(models.Product)\
+            .filter(models.Product.barcode == item["barcode"])\
+            .first()
+
+        if exists:
+            continue
+
+        product = models.Product(
+            barcode=item["barcode"],
+            name=item["name"],
+            brand=item.get("brand"),
+            ingredients=item["ingredients"],
+
+            calories=item["nutrition"]["calories"],
+            proteins=item["nutrition"]["proteins"],
+            fats=item["nutrition"]["fats"],
+            carbs=item["nutrition"]["carbs"]
+        )
+
+        db.add(product)
+        added += 1
+
+    db.commit()
+    return {"added": added}
+
 
 # Поиск товара в базе (GET)
 @app.get("/products/{barcode}")
@@ -82,7 +119,7 @@ def get_all_products(db: Session = Depends(get_db)):
     return products
 
 
-# Удаление товара по штрихкоду (DELETE)
+# Удаление товара по штрих-коду (DELETE)
 @app.delete("/products/{barcode}")
 def delete_product_by_barcode(barcode: str, db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(models.Product.barcode == barcode).first()

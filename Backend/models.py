@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, fun
 from database import Base
 
 
-# 1. Таблица Юзеров
+# 1. Таблица Пользователей
 class User(Base):
     __tablename__ = "users"
 
