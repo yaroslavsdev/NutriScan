@@ -3,7 +3,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.yaroslavsdev.nutriscan.navigation.BottomNavItem
+import com.yaroslavsdev.nutriscan.ui.navigation.BottomNavItem
 import com.yaroslavsdev.nutriscan.ui.screens.*
 import com.yaroslavsdev.nutriscan.ui.screens.diary.FoodDiaryScreen
 import com.yaroslavsdev.nutriscan.ui.screens.history.CheckHistoryScreen

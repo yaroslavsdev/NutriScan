@@ -8,7 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.yaroslavsdev.nutriscan.navigation.BottomNavItem
+import com.yaroslavsdev.nutriscan.ui.navigation.BottomNavItem
 import com.yaroslavsdev.nutriscan.ui.components.BottomBar
 import kotlin.collections.contains
 

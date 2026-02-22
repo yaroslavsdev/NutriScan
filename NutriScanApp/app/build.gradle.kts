@@ -59,8 +59,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     // Navigation Controller
-    val nav_version = "2.9.7"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation(libs.androidx.navigation.compose)
 
     // CameraX
     implementation(libs.camerax.core)
@@ -70,4 +69,15 @@ dependencies {
 
     // ML Kit
     implementation(libs.mlkit.barcode)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+
+    // OkHttp для логирования
+    implementation(libs.logging.interceptor)
 }

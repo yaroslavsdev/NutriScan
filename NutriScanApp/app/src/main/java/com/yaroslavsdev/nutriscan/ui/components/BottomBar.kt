@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.yaroslavsdev.nutriscan.navigation.BottomNavItem
+import com.yaroslavsdev.nutriscan.ui.navigation.BottomNavItem
 
 @Composable
 fun BottomBar(navController: NavController) {

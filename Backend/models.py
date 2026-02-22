@@ -9,9 +9,9 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
-    password_hash = Column(String)  # Храним только хэш пароля!
+    password_hash = Column(String)
 
-    # Персональные аллергены (можно хранить строкой "арахис, молоко")
+    # Персональные аллергены (Скорее всего буду хранить строкой "арахис, молоко")
     user_allergens = Column(String, default="")
 
 
