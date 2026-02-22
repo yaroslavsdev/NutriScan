@@ -36,10 +36,12 @@ fun ScannerScreen(
         }
 
         state.barcode != null -> {
-            ScanResultScreen(
-                barcode = state.barcode!!,
-                onScanAgain = { viewModel.reset() }
-            )
+            navController.navigate("product/${state.barcode}")
+
+//            ScanResultScreen(
+//                barcode = state.barcode!!,
+//                onScanAgain = { viewModel.reset() }
+//            )
         }
 
         else -> {
