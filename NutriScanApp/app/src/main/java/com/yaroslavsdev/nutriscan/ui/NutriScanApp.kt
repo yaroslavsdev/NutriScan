@@ -6,6 +6,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.yaroslavsdev.nutriscan.ui.navigation.BottomNavItem
@@ -37,7 +38,7 @@ fun NutriScanApp() {
     ) { innerPadding ->
         AppNavigation(
             navController = navController,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(0.dp)
         )
     }
 }
