@@ -1,12 +1,15 @@
 package com.yaroslavsdev.nutriscan.ui.screens.auth
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -19,32 +22,47 @@ fun SignInTab(navController: NavController, viewModel: AuthViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            imageVector = Icons.Default.Lock,
-            contentDescription = null,
-            modifier = Modifier.size(80.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
+        Icon(Icons.Default.Person, null, Modifier.size(46.dp), MaterialTheme.colorScheme.primary)
         Text("NutriScan", style = MaterialTheme.typography.headlineLarge)
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(Modifier.height(14.dp))
 
         OutlinedTextField(
             value = viewModel.loginEmail,
-            onValueChange = { viewModel.loginEmail = it },
+            onValueChange = { viewModel.updateLoginEmail(it) },
             label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            isError = viewModel.emailError != null,
+            supportingText = { viewModel.emailError?.let { Text(it) } },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+
+        Spacer(Modifier.height(4.dp))
+
         OutlinedTextField(
             value = viewModel.loginPassword,
-            onValueChange = { viewModel.loginPassword = it },
+            onValueChange = { viewModel.updateLoginPassword(it) },
             label = { Text("Пароль") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
+            isError = viewModel.passwordError != null,
+            supportingText = { viewModel.passwordError?.let { Text(it) } },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done)
         )
-        Spacer(modifier = Modifier.height(24.dp))
+
+        Spacer(Modifier.height(24.dp))
+
         Button(
-            onClick = { viewModel.signIn { navController.navigate(Screen.Main.route) } },
+            onClick = {
+                if (viewModel.validateSignIn()) {
+                    viewModel.signIn {
+                        navController.navigate(Screen.Main.route) {
+                            popUpTo(Screen.Auth.route) { inclusive = true }
+                        }
+                    }
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium
         ) {
