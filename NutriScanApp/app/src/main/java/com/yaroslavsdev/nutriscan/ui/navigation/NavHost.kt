@@ -10,6 +10,7 @@ import com.yaroslavsdev.nutriscan.ui.screens.*
 import com.yaroslavsdev.nutriscan.ui.screens.diary.FoodDiaryScreen
 import com.yaroslavsdev.nutriscan.ui.screens.history.CheckHistoryScreen
 import com.yaroslavsdev.nutriscan.ui.screens.product.ProductScreen
+import com.yaroslavsdev.nutriscan.ui.screens.profile.ProfileScreen
 import com.yaroslavsdev.nutriscan.ui.screens.scan.ScannerScreen
 
 @Composable
