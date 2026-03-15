@@ -3,6 +3,8 @@ import json
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
+
+import auth_utils
 import models
 from database import engine, get_db
 
@@ -25,7 +27,6 @@ class ProductCreate(BaseModel):
 
     nutrition: Nutrition
 
-
 class ProductResponse(BaseModel):
     id: int
     barcode: str
@@ -41,6 +42,47 @@ class ProductResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class UserCreate(BaseModel):
+    username: str
+    email: str
+    password: str
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+@app.post("/auth/register", response_model=Token)
+def register(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.email == user.email).first()
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email уже зарегистрирован")
+
+    new_user = models.User(
+        username=user.username,
+        email=user.email,
+        password_hash=auth_utils.hash_password(user.password)
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    token = auth_utils.create_access_token(data={"sub": new_user.email})
+    return {"access_token": token, "token_type": "bearer"}
+
+
+@app.post("/auth/login", response_model=Token)
+def login(user: UserLogin, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.email == user.email).first()
+    if not db_user or not auth_utils.verify_password(user.password, db_user.password_hash):
+        raise HTTPException(status_code=401, detail="Неверный email или пароль")
+
+    token = auth_utils.create_access_token(data={"sub": db_user.email})
+    return {"access_token": token, "token_type": "bearer"}
 
 
 # Добавить товар в базу (POST)
