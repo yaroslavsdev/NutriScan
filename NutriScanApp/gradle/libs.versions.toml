@@ -17,6 +17,7 @@ mlkit = "17.3.0"
 navigation = "2.9.7"
 playServicesAnalyticsImpl = "18.2.0"
 foundation = "1.10.5"
+securityCrypto = "1.1.0-alpha06"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,6 +47,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
 play-services-analytics-impl = { group = "com.google.android.gms", name = "play-services-analytics-impl", version.ref = "playServicesAnalyticsImpl" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -82,4 +82,7 @@ dependencies {
 
     // OkHttp для логирования
     implementation(libs.logging.interceptor)
+
+    // Security
+    implementation(libs.androidx.security.crypto)
 }

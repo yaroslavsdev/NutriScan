@@ -9,11 +9,27 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-
 import kotlinx.coroutines.launch
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.yaroslavsdev.nutriscan.data.local.TokenManager
+import com.yaroslavsdev.nutriscan.data.remote.NetworkModule
+import com.yaroslavsdev.nutriscan.data.repository.AuthRepository
 
 @Composable
-fun AuthScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
+fun AuthScreen(navController: NavController) {
+    val context = LocalContext.current
+    val authViewModel: AuthViewModel = viewModel(
+        factory = viewModelFactory {
+            initializer {
+                val tokenManager = TokenManager(context)
+                val repository = AuthRepository(NetworkModule.authApi, tokenManager)
+                AuthViewModel(repository)
+            }
+        }
+    )
+
     val pagerState = rememberPagerState(pageCount = { 2 })
     val scope = rememberCoroutineScope()
 
