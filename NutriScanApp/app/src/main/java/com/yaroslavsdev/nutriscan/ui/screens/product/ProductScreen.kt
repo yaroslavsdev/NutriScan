@@ -40,14 +40,12 @@ fun ProductScreen(
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
-
-    val tokenManager = remember { TokenManager(context) }
-    val repository = remember { ProductRepository(tokenManager) }
-
     val viewModel: ProductViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val tokenManager = TokenManager(context)
+                val repository = ProductRepository(tokenManager)
                 return ProductViewModel(repository) as T
             }
         }

@@ -86,4 +86,9 @@ dependencies {
 
     // Security
     implementation(libs.androidx.security.crypto)
+
+    // Koin для Android
+    implementation("io.insert-koin:koin-android:3.5.3")
+    // Koin для Jetpack Compose
+    implementation("io.insert-koin:koin-androidx-compose:3.5.3")
 }
