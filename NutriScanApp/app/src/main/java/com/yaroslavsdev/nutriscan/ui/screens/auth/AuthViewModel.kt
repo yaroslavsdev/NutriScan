@@ -7,7 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yaroslavsdev.nutriscan.data.repository.AuthRepository
 import kotlinx.coroutines.launch
-
+import org.json.JSONObject
+import retrofit2.HttpException
 
 class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     // Поля ввода
@@ -27,13 +28,15 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
 
     // Фильтрация ввода
     fun updateLoginEmail(input: String) {
-        loginEmail = input.replace("\n", "").replace(" ", "")
+        loginEmail = input.replace("\n", "").replace(" ", "").trim()
         emailError = null
+        serverError = null
     }
 
     fun updateLoginPassword(input: String) {
-        loginPassword = input.replace("\n", "").replace(" ", "")
+        loginPassword = input.replace("\n", "").replace(" ", "").trim()
         passwordError = null
+        serverError = null
     }
 
     fun updateRegName(input: String) {
@@ -86,7 +89,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
                 onSuccess()
             }
             result.onFailure { exception ->
-                serverError = exception.message ?: "Ошибка входа"
+                serverError = mapErrorToMessage(exception)
             }
         }
     }
@@ -105,8 +108,34 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
                 onSuccess()
             }
             result.onFailure { exception ->
-                serverError = exception.message ?: "Ошибка регистрации"
+                serverError = mapErrorToMessage(exception)
             }
+        }
+    }
+
+    private fun mapErrorToMessage(throwable: Throwable): String {
+        return when (throwable) {
+            is HttpException -> {
+                try {
+                    val errorBody = throwable.response()?.errorBody()?.string()
+                    val json = JSONObject(errorBody ?: "")
+                    json.getString("detail")
+                } catch (e: Exception) {
+                    when (throwable.code()) {
+                        401 -> "Неверный логин или пароль"
+                        404 -> "Аккаунт не найден"
+                        500 -> "Ошибка на сервере, скоро починим"
+                        else -> "Ошибка сервера (${throwable.code()})"
+                    }
+                }
+            }
+            is java.net.UnknownHostException, is java.net.ConnectException -> {
+                "Нет связи с сервером"
+            }
+            is java.net.SocketTimeoutException -> {
+                "Сервер слишком долго не отвечает"
+            }
+            else -> "Что-то пошло не так, попробуйте позже"
         }
     }
 }

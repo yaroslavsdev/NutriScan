@@ -6,6 +6,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -18,6 +19,7 @@ import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 fun SignUpTab(navController: NavController, viewModel: AuthViewModel) {
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text("Создать профиль", style = MaterialTheme.typography.headlineMedium)
@@ -77,6 +79,15 @@ fun SignUpTab(navController: NavController, viewModel: AuthViewModel) {
             shape = MaterialTheme.shapes.medium
         ) {
             Text("Зарегистрироваться")
+        }
+
+        viewModel.serverError?.let { error ->
+            Text(
+                text = error,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
         }
     }
 }
