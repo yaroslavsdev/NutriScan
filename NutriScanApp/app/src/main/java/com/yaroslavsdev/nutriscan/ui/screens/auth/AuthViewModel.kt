@@ -5,12 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yaroslavsdev.nutriscan.data.local.TokenManager
 import com.yaroslavsdev.nutriscan.data.repository.AuthRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.HttpException
 
-class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
+class AuthViewModel(
+    private val repository: AuthRepository,
+) : ViewModel() {
     // Поля ввода
     var loginEmail by mutableStateOf("")
     var loginPassword by mutableStateOf("")
@@ -85,7 +88,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
             val result = repository.login(loginEmail, loginPassword)
 
             isLoading = false
-            result.onSuccess {
+            result.onSuccess { authResponse ->
                 onSuccess()
             }
             result.onFailure { exception ->

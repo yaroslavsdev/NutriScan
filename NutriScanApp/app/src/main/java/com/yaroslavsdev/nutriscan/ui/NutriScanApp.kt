@@ -1,6 +1,6 @@
 package com.yaroslavsdev.nutriscan.ui
 
-import AppNavigation
+import com.yaroslavsdev.nutriscan.ui.navigation.AppNavigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -38,7 +38,6 @@ fun NutriScanApp() {
     ) { innerPadding ->
         AppNavigation(
             navController = navController,
-            modifier = Modifier.padding(0.dp)
         )
     }
 }

@@ -21,19 +21,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.yaroslavsdev.nutriscan.data.local.TokenManager
+import com.yaroslavsdev.nutriscan.data.repository.ProductRepository
 import com.yaroslavsdev.nutriscan.ui.state.ProductState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductScreen(
     barcode: String,
-    onBack: () -> Unit,
-    viewModel: ProductViewModel = viewModel()
+    onBack: () -> Unit
 ) {
+    val context = LocalContext.current
+
+    val tokenManager = remember { TokenManager(context) }
+    val repository = remember { ProductRepository(tokenManager) }
+
+    val viewModel: ProductViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return ProductViewModel(repository) as T
+            }
+        }
+    )
 
     val state by viewModel.state.collectAsState()
 
