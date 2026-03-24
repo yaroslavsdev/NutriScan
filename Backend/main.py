@@ -124,6 +124,13 @@ def save_user_allergens(
 def get_user_allergens(current_user: models.User = Depends(get_current_user)):
     return {"allergens": current_user.user_allergens or []}
 
+@app.get("/auth/me")
+def get_me(current_user: models.User = Depends(get_current_user)):
+    return {
+        "username": current_user.username,
+        "email": current_user.email,
+        "allergens": current_user.user_allergens or []
+    }
 
 # Добавить товар в базу (POST)
 @app.post("/products")
