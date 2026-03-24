@@ -35,12 +35,3 @@ fun HomeScreen(navController: NavHostController) {
         }
     }
 }
-
-
-@Preview(showBackground = true)
-@Composable
-fun HomePreview() {
-    NutriScanTheme {
-        HomeScreen(navController = rememberNavController())
-    }
-}

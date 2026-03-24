@@ -38,7 +38,7 @@ fun AppNavigation(
             AllergensScreen(navController)
         }
         composable(Screen.Main.route) {
-            MainContentScreen()
+            MainContentScreen(rootNavController = navController)
         }
     }
 }

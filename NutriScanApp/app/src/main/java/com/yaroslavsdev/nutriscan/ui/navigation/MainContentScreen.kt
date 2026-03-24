@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,7 +20,7 @@ import com.yaroslavsdev.nutriscan.ui.screens.profile.ProfileScreen
 import com.yaroslavsdev.nutriscan.ui.screens.scan.ScannerScreen
 
 @Composable
-fun MainContentScreen() {
+fun MainContentScreen(rootNavController: NavHostController) {
     val bottomNavController = rememberNavController()
 
     Scaffold(
@@ -35,7 +36,10 @@ fun MainContentScreen() {
             composable(BottomNavItem.Home.route) { HomeScreen(bottomNavController) }
             composable(BottomNavItem.Diary.route) { FoodDiaryScreen(bottomNavController) }
             composable(BottomNavItem.History.route) { CheckHistoryScreen(bottomNavController) }
-            composable(BottomNavItem.Profile.route) { ProfileScreen(bottomNavController) }
+
+            composable(BottomNavItem.Profile.route) {
+                ProfileScreen(navController = rootNavController)
+            }
 
             composable("scanner") { ScannerScreen(bottomNavController) }
             composable(
