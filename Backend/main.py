@@ -1,6 +1,8 @@
 import json
 
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
+from fastapi.security import OAuth2PasswordBearer
+from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
@@ -56,6 +58,25 @@ class Token(BaseModel):
     token_type: str
 
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+
+class AllergensUpdate(BaseModel):
+    allergens: list[str]
+
+def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, auth_utils.SECRET_KEY, algorithms=[auth_utils.ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise HTTPException(status_code=401, detail="Невалидный токен")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Ошибка авторизации")
+
+    user = db.query(models.User).filter(models.User.email == email).first()
+    if user is None:
+        raise HTTPException(status_code=401, detail="Пользователь не найден")
+    return user
+
 @app.post("/auth/register", response_model=Token)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
@@ -83,6 +104,25 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
 
     token = auth_utils.create_access_token(data={"sub": db_user.email})
     return {"access_token": token, "token_type": "bearer"}
+
+
+@app.post("/auth/allergens")
+def save_user_allergens(
+        data: AllergensUpdate,
+        db: Session = Depends(get_db),
+        current_user: models.User = Depends(get_current_user)
+):
+    current_user.user_allergens = data.allergens
+
+    db.commit()
+    db.refresh(current_user)
+
+    return {"status": "success", "saved_allergens": current_user.user_allergens}
+
+
+@app.get("/auth/allergens")
+def get_user_allergens(current_user: models.User = Depends(get_current_user)):
+    return {"allergens": current_user.user_allergens or []}
 
 
 # Добавить товар в базу (POST)

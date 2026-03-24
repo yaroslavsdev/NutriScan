@@ -15,9 +15,15 @@ class AllergensViewModel(
 ) : ViewModel() {
 
     private val _allergens = MutableStateFlow(listOf(
-        Allergen("lactose", "Лактоза", R.drawable.ic_launcher_background),
-        //Allergen("peanuts", "Арахис", R.drawable.ic_peanut),
-        //Allergen("gluten", "Глютен", R.drawable.ic_wheat),
+        Allergen("lactose", "Молоко", R.drawable.ic_launcher_foreground),
+        Allergen("eggs", "Яйца", R.drawable.ic_launcher_foreground),
+        Allergen("gluten", "Глютен", R.drawable.ic_launcher_foreground),
+        Allergen("peanuts", "Арахис", R.drawable.ic_peanut),
+        Allergen("tree_nuts", "Орехи", R.drawable.ic_launcher_foreground),
+        Allergen("soya", "Соя", R.drawable.ic_launcher_foreground),
+        Allergen("fish", "Рыба", R.drawable.ic_launcher_foreground),
+        Allergen("seafood", "Морепродукты", R.drawable.ic_launcher_foreground),
+        Allergen("sesame", "Кунжут", R.drawable.ic_launcher_foreground)
     ))
     val allergens = _allergens.asStateFlow()
 

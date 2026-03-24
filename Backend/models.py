@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func, ARRAY
 from database import Base
 
 
@@ -10,7 +10,7 @@ class User(Base):
     username = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=False)
-    user_allergens = Column(String, default="")
+    user_allergens = Column(ARRAY(String), default=[])
 
 
 # 2. Таблица Продуктов
