@@ -20,5 +20,5 @@ class TokenManager(context: Context) {
 
     fun saveToken(token: String) = prefs.edit { putString("jwt_token", token) }
     fun getToken(): String? = prefs.getString("jwt_token", null)
-    fun clear() = prefs.edit { remove("jwt_token") }
+    fun deleteToken() = prefs.edit { remove("jwt_token") }
 }
