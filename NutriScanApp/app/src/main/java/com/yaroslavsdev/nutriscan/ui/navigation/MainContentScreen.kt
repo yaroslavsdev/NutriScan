@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.yaroslavsdev.nutriscan.ui.components.BottomBar
+import com.yaroslavsdev.nutriscan.ui.navigation.BottomNavItem
 import com.yaroslavsdev.nutriscan.ui.screens.HomeScreen
 import com.yaroslavsdev.nutriscan.ui.screens.diary.FoodDiaryScreen
 import com.yaroslavsdev.nutriscan.ui.screens.history.CheckHistoryScreen

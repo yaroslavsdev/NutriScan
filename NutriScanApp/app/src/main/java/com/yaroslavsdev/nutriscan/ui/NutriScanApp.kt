@@ -1,5 +1,6 @@
 package com.yaroslavsdev.nutriscan.ui
 
+import android.annotation.SuppressLint
 import com.yaroslavsdev.nutriscan.ui.navigation.AppNavigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -13,6 +14,7 @@ import com.yaroslavsdev.nutriscan.ui.navigation.BottomNavItem
 import com.yaroslavsdev.nutriscan.ui.components.BottomBar
 import kotlin.collections.contains
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NutriScanApp() {
     val navController = rememberNavController()
@@ -37,7 +39,8 @@ fun NutriScanApp() {
         }
     ) { innerPadding ->
         AppNavigation(
-            navController = navController
+            navController = navController,
+            modifier = Modifier.padding(0.dp)
         )
     }
 }

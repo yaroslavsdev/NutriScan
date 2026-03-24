@@ -69,7 +69,7 @@ fun SignUpTab(navController: NavController, viewModel: AuthViewModel) {
             onClick = {
                 if (viewModel.validateSignUp()) {
                     viewModel.signUp {
-                        navController.navigate(Screen.Main.route) {
+                        navController.navigate(Screen.AllergensScreen.route) {
                             popUpTo(Screen.Auth.route) { inclusive = true }
                         }
                     }
