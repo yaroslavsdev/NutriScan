@@ -10,11 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ScannerScreen(
     navController: NavController,
-    viewModel: ScanViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: ScanViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -37,11 +38,6 @@ fun ScannerScreen(
 
         state.barcode != null -> {
             navController.navigate("product/${state.barcode}")
-
-//            ScanResultScreen(
-//                barcode = state.barcode!!,
-//                onScanAgain = { viewModel.reset() }
-//            )
         }
 
         else -> {

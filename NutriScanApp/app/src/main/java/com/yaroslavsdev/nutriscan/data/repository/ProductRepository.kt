@@ -1,16 +1,16 @@
 package com.yaroslavsdev.nutriscan.data.repository
 
 import com.yaroslavsdev.nutriscan.data.local.TokenManager
-import com.yaroslavsdev.nutriscan.data.remote.NetworkModule
 import com.yaroslavsdev.nutriscan.data.remote.api.ProductApi
 import com.yaroslavsdev.nutriscan.data.remote.dto.toDomain
 import com.yaroslavsdev.nutriscan.domain.model.Product
 import okio.IOException
 import retrofit2.HttpException
 
-class ProductRepository(private val tokenManager: TokenManager) {
-    private val api = NetworkModule.createService(ProductApi::class.java, tokenManager)
-
+class ProductRepository(
+    private val api: ProductApi,
+    private val tokenManager: TokenManager
+) {
     suspend fun getProduct(barcode: String): Result<Product> {
         return try {
             val dto = api.getProduct(barcode)

@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class ScanViewModel : ViewModel() {
-
     private val _state = MutableStateFlow(ScanUiState())
     val state = _state.asStateFlow()
 
