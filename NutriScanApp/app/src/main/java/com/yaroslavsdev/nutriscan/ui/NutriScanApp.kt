@@ -37,7 +37,7 @@ fun NutriScanApp() {
         }
     ) { innerPadding ->
         AppNavigation(
-            navController = navController,
+            navController = navController
         )
     }
 }

@@ -12,7 +12,7 @@ import org.json.JSONObject
 import retrofit2.HttpException
 
 class AuthViewModel(
-    private val repository: AuthRepository,
+    private val repository: AuthRepository
 ) : ViewModel() {
     // Поля ввода
     var loginEmail by mutableStateOf("")

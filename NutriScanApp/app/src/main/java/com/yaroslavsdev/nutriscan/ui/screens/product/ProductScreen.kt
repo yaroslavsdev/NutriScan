@@ -32,25 +32,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yaroslavsdev.nutriscan.data.local.TokenManager
 import com.yaroslavsdev.nutriscan.data.repository.ProductRepository
 import com.yaroslavsdev.nutriscan.ui.state.ProductState
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductScreen(
     barcode: String,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    viewModel: ProductViewModel = koinViewModel()
 ) {
-    val context = LocalContext.current
-    val viewModel: ProductViewModel = viewModel(
-        factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val tokenManager = TokenManager(context)
-                val repository = ProductRepository(tokenManager)
-                return ProductViewModel(repository) as T
-            }
-        }
-    )
-
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(barcode) {
