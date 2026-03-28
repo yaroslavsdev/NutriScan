@@ -35,7 +35,7 @@ fun ProfileScreen(
     val profile by viewModel.userProfile.collectAsState()
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Мой Профиль", style = MaterialTheme.typography.headlineMedium)

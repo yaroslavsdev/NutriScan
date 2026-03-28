@@ -14,6 +14,7 @@ class AllergensViewModel(private val repository: AuthRepository) : ViewModel() {
 
     private val _isError = MutableStateFlow(false)
     val isError = _isError.asStateFlow()
+    private var isSaving = false
 
     private val _allergens = MutableStateFlow(listOf(
         Allergen("lactose", "Молоко", R.drawable.ic_launcher_foreground),
@@ -50,9 +51,24 @@ class AllergensViewModel(private val repository: AuthRepository) : ViewModel() {
     }
 
     fun saveAndContinue(onSuccess: () -> Unit) {
+        if (isSaving) return
+        isSaving = true
+
         viewModelScope.launch {
             val selectedIds = _allergens.value.filter { it.isSelected }.map { it.id }
-            repository.saveAllergens(selectedIds).onSuccess { onSuccess() }
+            repository.saveAllergens(selectedIds)
+                .onSuccess {
+                    isSaving = false
+                    onSuccess()
+                }
+                .onFailure {
+                    isSaving = false
+                    _isError.value = true
+                }
         }
+    }
+
+    fun consumeError() {
+        _isError.value = false
     }
 }

@@ -1,5 +1,6 @@
 package com.yaroslavsdev.nutriscan.ui.screens.allergens
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,11 +26,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,35 +49,34 @@ fun AllergensScreen(
     fromRegistration: Boolean,
     viewModel: AllergensViewModel = koinViewModel()
 ) {
+    val context = LocalContext.current
     val allergens by viewModel.allergens.collectAsState()
     val isError by viewModel.isError.collectAsState()
 
-    if (isError) {
-        Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("Нет связи с сервером", style = MaterialTheme.typography.titleLarge)
-                Spacer(Modifier.height(8.dp))
-                Button(onClick = { viewModel.loadData() }) { Text("Попробовать снова") }
-            }
+    LaunchedEffect(isError) {
+        if (isError && allergens.isNotEmpty()) {
+            Toast.makeText(context, "Ошибка сети. Не удалось сохранить.", Toast.LENGTH_SHORT).show()
+            viewModel.consumeError()
         }
-    } else {
-        AllergensContent(
-            allergens = allergens,
-            onAllergenClick = { viewModel.toggleAllergen(it) },
-            onDoneClick = {
-                viewModel.saveAndContinue {
-                    if (fromRegistration) {
-                        navController.navigate(Screen.Main.route) {
-                            popUpTo("auth") { inclusive = true }
-                        }
-                    } else {
-                        navController.popBackStack()
+    }
+    
+    AllergensContent(
+        allergens = allergens,
+        onAllergenClick = { viewModel.toggleAllergen(it) },
+        onDoneClick = {
+            viewModel.saveAndContinue {
+                if (fromRegistration) {
+                    navController.navigate(Screen.Main.route) {
+                        popUpTo("auth") { inclusive = true }
                     }
+                } else {
+                    navController.popBackStack()
                 }
             }
-        )
-    }
+        }
+    )
 }
+
 
 @Composable
 fun AllergensContent(
@@ -82,7 +84,7 @@ fun AllergensContent(
     onAllergenClick: (String) -> Unit,
     onDoneClick: () -> Unit
 ) {
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
+    Column(Modifier.fillMaxSize().padding(16.dp, 30.dp, 16.dp, 18.dp)) {
         Text("Выберите ваши аллергены", style = MaterialTheme.typography.headlineMedium)
         Text("Это поможет предупреждать вас об опасности", color = Color.Gray)
 
