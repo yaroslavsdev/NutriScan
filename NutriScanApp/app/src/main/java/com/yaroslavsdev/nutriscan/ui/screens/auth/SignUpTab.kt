@@ -69,14 +69,14 @@ fun SignUpTab(navController: NavController, viewModel: AuthViewModel) {
             onClick = {
                 if (viewModel.validateSignUp()) {
                     viewModel.signUp {
-                        navController.navigate(Screen.AllergensScreen.route) {
+                        navController.navigate("${Screen.AllergensScreen.route}/true") {
                             popUpTo(Screen.Auth.route) { inclusive = true }
                         }
                     }
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.large
         ) {
             Text("Зарегистрироваться")
         }

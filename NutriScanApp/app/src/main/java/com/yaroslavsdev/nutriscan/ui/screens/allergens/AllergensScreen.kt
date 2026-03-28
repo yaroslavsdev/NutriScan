@@ -3,8 +3,10 @@ package com.yaroslavsdev.nutriscan.ui.screens.allergens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,21 +43,37 @@ import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 @Composable
 fun AllergensScreen(
     navController: NavController,
+    fromRegistration: Boolean,
     viewModel: AllergensViewModel = koinViewModel()
 ) {
     val allergens by viewModel.allergens.collectAsState()
+    val isError by viewModel.isError.collectAsState()
 
-    AllergensContent(
-        allergens = allergens,
-        onAllergenClick = { viewModel.toggleAllergen(it) },
-        onDoneClick = {
-            viewModel.saveAndContinue {
-                navController.navigate(Screen.Main.route) {
-                    popUpTo(Screen.AllergensScreen.route) { inclusive = true }
-                }
+    if (isError) {
+        Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Нет связи с сервером", style = MaterialTheme.typography.titleLarge)
+                Spacer(Modifier.height(8.dp))
+                Button(onClick = { viewModel.loadData() }) { Text("Попробовать снова") }
             }
         }
-    )
+    } else {
+        AllergensContent(
+            allergens = allergens,
+            onAllergenClick = { viewModel.toggleAllergen(it) },
+            onDoneClick = {
+                viewModel.saveAndContinue {
+                    if (fromRegistration) {
+                        navController.navigate(Screen.Main.route) {
+                            popUpTo("auth") { inclusive = true }
+                        }
+                    } else {
+                        navController.popBackStack()
+                    }
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -82,8 +100,8 @@ fun AllergensContent(
 
         Button(
             onClick = onDoneClick,
-            modifier = Modifier.fillMaxWidth().height(56.dp),
-            shape = MaterialTheme.shapes.medium
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large
         ) {
             Text("Готово")
         }

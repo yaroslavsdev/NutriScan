@@ -38,20 +38,23 @@ fun ProfileScreen(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Мой Профиль", style = MaterialTheme.typography.headlineLarge)
+        Text("Мой Профиль", style = MaterialTheme.typography.headlineMedium)
 
         Spacer(modifier = Modifier.height(20.dp))
 
         profile?.let {
-            Text("Привет, ${it.username}!", fontWeight = FontWeight.Bold)
-            Text(it.email, color = Color.Gray)
+            Text("Имя: ${it.username}", fontWeight = FontWeight.Bold)
+            Text("Почта: ${it.email}", fontWeight = FontWeight.Bold)
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
-            onClick = { navController.navigate(Screen.AllergensScreen.route) },
-            modifier = Modifier.fillMaxWidth()
+            onClick = {
+                navController.navigate("${Screen.AllergensScreen.route}/false")
+            },
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large
         ) {
             Text("Настроить аллергены")
         }
@@ -67,7 +70,8 @@ fun ProfileScreen(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red)
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red),
+            shape = MaterialTheme.shapes.large
         ) {
             Text("Выйти")
         }

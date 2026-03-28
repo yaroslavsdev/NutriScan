@@ -4,8 +4,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.yaroslavsdev.nutriscan.data.local.TokenManager
 import com.yaroslavsdev.nutriscan.ui.screens.allergens.AllergensScreen
 import com.yaroslavsdev.nutriscan.ui.screens.auth.AuthScreen
@@ -34,9 +36,19 @@ fun AppNavigation(
         composable(Screen.Auth.route) {
             AuthScreen(navController)
         }
-        composable(Screen.AllergensScreen.route) {
-            AllergensScreen(navController)
+
+        composable(
+            route = "allergens_screen/{fromRegistration}",
+            arguments = listOf(navArgument("fromRegistration") { type = NavType.BoolType })
+        ) { backStackEntry ->
+            val fromRegistration = backStackEntry.arguments?.getBoolean("fromRegistration") ?: false
+
+            AllergensScreen(
+                navController = navController,
+                fromRegistration = fromRegistration
+            )
         }
+
         composable(Screen.Main.route) {
             MainContentScreen(rootNavController = navController)
         }
