@@ -3,6 +3,7 @@ package com.yaroslavsdev.nutriscan.data.repository
 import com.yaroslavsdev.nutriscan.data.local.TokenManager
 import com.yaroslavsdev.nutriscan.data.remote.api.AuthApi
 import com.yaroslavsdev.nutriscan.data.remote.dto.AuthRequest
+import com.yaroslavsdev.nutriscan.data.remote.dto.UserProfileDto
 
 class AuthRepository(
     private val api: AuthApi,
@@ -32,5 +33,26 @@ class AuthRepository(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    suspend fun getMe(): Result<UserProfileDto> {
+        return try {
+            Result.success(api.getMe())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun saveAllergens(ids: List<String>): Result<Unit> {
+        return try {
+            api.saveAllergens(com.yaroslavsdev.nutriscan.data.remote.dto.AllergensUpdateDto(ids))
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    fun logout() {
+        tokenManager.deleteToken()
     }
 }

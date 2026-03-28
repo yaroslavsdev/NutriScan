@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import com.yaroslavsdev.nutriscan.domain.model.Allergen
 import org.koin.androidx.compose.koinViewModel
 import com.yaroslavsdev.nutriscan.R
+import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 
 @Composable
 fun AllergensScreen(
@@ -49,8 +50,8 @@ fun AllergensScreen(
         onAllergenClick = { viewModel.toggleAllergen(it) },
         onDoneClick = {
             viewModel.saveAndContinue {
-                navController.navigate("main_root") {
-                    popUpTo("allergens_screen") { inclusive = true }
+                navController.navigate(Screen.Main.route) {
+                    popUpTo(Screen.AllergensScreen.route) { inclusive = true }
                 }
             }
         }
@@ -63,7 +64,7 @@ fun AllergensContent(
     onAllergenClick: (String) -> Unit,
     onDoneClick: () -> Unit
 ) {
-    Column(Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState())) {
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
         Text("Выберите ваши аллергены", style = MaterialTheme.typography.headlineMedium)
         Text("Это поможет предупреждать вас об опасности", color = Color.Gray)
 
@@ -81,7 +82,7 @@ fun AllergensContent(
 
         Button(
             onClick = onDoneClick,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(56.dp),
             shape = MaterialTheme.shapes.medium
         ) {
             Text("Готово")

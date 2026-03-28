@@ -10,9 +10,33 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
+
 class AllergensViewModel(
     private val repository: AuthRepository
 ) : ViewModel() {
+    init {
+        loadCurrentAllergens()
+    }
+
+    private fun loadCurrentAllergens() {
+        viewModelScope.launch {
+            repository.getMe().onSuccess { profile ->
+                _allergens.update { list ->
+                    list.map { it.copy(isSelected = profile.allergens.contains(it.id)) }
+                }
+            }
+        }
+    }
+
+    fun saveAndContinue(onSuccess: () -> Unit) {
+        val selectedIds = _allergens.value.filter { it.isSelected }.map { it.id }
+        viewModelScope.launch {
+            repository.saveAllergens(selectedIds).onSuccess {
+                onSuccess()
+            }
+        }
+    }
 
     private val _allergens = MutableStateFlow(listOf(
         Allergen("lactose", "Молоко", R.drawable.ic_launcher_foreground),
@@ -30,15 +54,6 @@ class AllergensViewModel(
     fun toggleAllergen(id: String) {
         _allergens.update { list ->
             list.map { if (it.id == id) it.copy(isSelected = !it.isSelected) else it }
-        }
-    }
-
-    fun saveAndContinue(onSuccess: () -> Unit) {
-        val selectedIds = _allergens.value.filter { it.isSelected }.map { it.id }
-        // Вызов репозитория для сохранения на сервер
-        viewModelScope.launch {
-            // repository.saveAllergens(selectedIds)
-            onSuccess()
         }
     }
 }

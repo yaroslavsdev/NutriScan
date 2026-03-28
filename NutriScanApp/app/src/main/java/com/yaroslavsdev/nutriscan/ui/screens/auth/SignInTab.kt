@@ -20,7 +20,7 @@ import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 @Composable
 fun SignInTab(navController: NavController, viewModel: AuthViewModel) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
