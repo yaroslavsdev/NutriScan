@@ -4,7 +4,6 @@ from app.routers import auth, products
 from app.database import engine
 from app import models
 
-# Создаем таблицы
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -15,7 +14,6 @@ app = FastAPI(
     ]
 )
 
-# Подключаем роутеры
 app.include_router(auth.router)
 app.include_router(products.router)
 

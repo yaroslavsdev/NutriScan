@@ -5,7 +5,6 @@ from app import models, schemas, auth_utils, database, dependencies
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-
 @router.post("/register", response_model=schemas.Token)
 def register(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
@@ -53,7 +52,6 @@ def save_user_allergens(
     db.refresh(current_user)
 
     return {"status": "success", "saved_allergens": current_user.user_allergens}
-
 
 @router.get("/allergens")
 def get_user_allergens(current_user: models.User = Depends(dependencies.get_current_user)):
