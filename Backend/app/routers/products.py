@@ -7,7 +7,8 @@ from app.schemas import *
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
-# Добавить товар в базу (POST)
+
+# Добавление товара в базу
 @router.post("")
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     db_product = models.Product(
@@ -31,6 +32,8 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=400, detail="Товар с таким штрих-кодом уже есть")
 
+
+# Импорт нескольких товаров
 @router.post("/import")
 def import_products(
     file: UploadFile = File(...),
@@ -67,23 +70,23 @@ def import_products(
     return {"added": added}
 
 
-# Поиск товара в базе (GET)
+# Получение одного товара
 @router.get("/{barcode}")
-def get_product(barcode: str, db: Session = Depends(get_db)):
+def get_product_by_barcode(barcode: str, db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(models.Product.barcode == barcode).first()
     if not product:
         raise HTTPException(status_code=404, detail="Товар не найден")
     return product
 
 
-# Получение всего списка товаров (GET)
+# Получение списка товаров
 @router.get("", response_model=list[ProductResponse])
 def get_all_products(db: Session = Depends(get_db)):
     products = db.query(models.Product).all()
     return products
 
 
-# Удаление товара по штрих-коду (DELETE)
+# Удаление товара по штрих-коду
 @router.delete("/{barcode}")
 def delete_product_by_barcode(barcode: str, db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(models.Product.barcode == barcode).first()

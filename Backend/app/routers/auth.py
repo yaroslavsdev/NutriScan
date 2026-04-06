@@ -5,6 +5,8 @@ from app import models, schemas, auth_utils, database, dependencies
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
+
+# Регистрация пользователя
 @router.post("/register", response_model=schemas.Token)
 def register(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
@@ -23,6 +25,8 @@ def register(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     token = auth_utils.create_access_token(data={"sub": new_user.email})
     return {"access_token": token, "token_type": "bearer"}
 
+
+# Авторизация пользователя
 @router.post("/login", response_model=schemas.Token)
 def login(user: schemas.UserLogin, db: Session = Depends(database.get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
@@ -32,6 +36,8 @@ def login(user: schemas.UserLogin, db: Session = Depends(database.get_db)):
     token = auth_utils.create_access_token(data={"sub": db_user.email})
     return {"access_token": token, "token_type": "bearer"}
 
+
+# Получение информации о пользователе
 @router.get("/me")
 def get_me(current_user: models.User = Depends(dependencies.get_current_user)):
     return {
@@ -40,6 +46,8 @@ def get_me(current_user: models.User = Depends(dependencies.get_current_user)):
         "allergens": current_user.user_allergens or []
     }
 
+
+# Отправить список аллергенов
 @router.post("/allergens")
 def save_user_allergens(
         data: schemas.AllergensUpdate,
@@ -53,6 +61,8 @@ def save_user_allergens(
 
     return {"status": "success", "saved_allergens": current_user.user_allergens}
 
+
+# Получить список аллергенов
 @router.get("/allergens")
 def get_user_allergens(current_user: models.User = Depends(dependencies.get_current_user)):
     return {"allergens": current_user.user_allergens or []}
