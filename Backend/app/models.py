@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func, ARRAY
-from database import Base
+from app.database import Base
 
 
 # 1. Таблица Пользователей
