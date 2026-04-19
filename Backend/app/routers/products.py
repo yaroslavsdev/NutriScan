@@ -41,33 +41,37 @@ def import_products(
 ):
     data = json.load(file.file)
 
-    added = 0
+    unique = {item["barcode"]: item for item in data}
 
-    for item in data:
-        exists = db.query(models.Product)\
-            .filter(models.Product.barcode == item["barcode"])\
-            .first()
+    existing = set(
+        row.barcode for row in
+        db.query(models.Product.barcode)
+          .filter(models.Product.barcode.in_(unique.keys()))
+          .all()
+    )
 
-        if exists:
-            continue
-
-        product = models.Product(
+    to_insert = [
+        models.Product(
             barcode=item["barcode"],
             name=item["name"],
             brand=item.get("brand"),
-            ingredients=item["ingredients"],
-
+            ingredients=item.get("ingredients", ""),
             calories=item["nutrition"]["calories"],
             proteins=item["nutrition"]["proteins"],
             fats=item["nutrition"]["fats"],
-            carbs=item["nutrition"]["carbs"]
+            carbs=item["nutrition"]["carbs"],
         )
+        for item in unique.values()
+        if item["barcode"] not in existing
+    ]
 
-        db.add(product)
-        added += 1
+    BATCH_SIZE = 500
+    for i in range(0, len(to_insert), BATCH_SIZE):
+        db.bulk_save_objects(to_insert[i:i + BATCH_SIZE])
+        db.flush()
 
     db.commit()
-    return {"added": added}
+    return {"added": len(to_insert), "skipped": len(data) - len(to_insert)}
 
 
 # Получение одного товара
