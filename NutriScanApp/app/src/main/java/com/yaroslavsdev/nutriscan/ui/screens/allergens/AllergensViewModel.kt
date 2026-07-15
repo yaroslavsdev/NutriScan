@@ -17,15 +17,15 @@ class AllergensViewModel(private val repository: AuthRepository) : ViewModel() {
     private var isSaving = false
 
     private val _allergens = MutableStateFlow(listOf(
-        Allergen("lactose", "Молоко", R.drawable.ic_launcher_foreground),
-        Allergen("eggs", "Яйца", R.drawable.ic_launcher_foreground),
-        Allergen("gluten", "Глютен", R.drawable.ic_launcher_foreground),
-        Allergen("peanuts", "Арахис", R.drawable.ic_peanut),
+        Allergen("lactose", "Молоко", R.drawable.ic_lactose),
+        Allergen("eggs", "Яйца", R.drawable.ic_eggs),
+        Allergen("gluten", "Глютен", R.drawable.ic_gluten),
+        Allergen("peanuts", "Арахис", R.drawable.ic_peanuts),
         Allergen("tree_nuts", "Орехи", R.drawable.ic_launcher_foreground),
         Allergen("soya", "Соя", R.drawable.ic_launcher_foreground),
-        Allergen("fish", "Рыба", R.drawable.ic_launcher_foreground),
+        Allergen("fish", "Рыба", R.drawable.ic_fish),
         Allergen("seafood", "Морепродукты", R.drawable.ic_launcher_foreground),
-        Allergen("sesame", "Кунжут", R.drawable.ic_launcher_foreground)
+        Allergen("sesame", "Кунжут", R.drawable.ic_sesame)
     ))
     val allergens = _allergens.asStateFlow()
 

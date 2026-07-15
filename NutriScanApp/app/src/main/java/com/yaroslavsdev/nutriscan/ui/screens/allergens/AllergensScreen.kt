@@ -2,6 +2,7 @@ package com.yaroslavsdev.nutriscan.ui.screens.allergens
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -59,7 +61,7 @@ fun AllergensScreen(
             viewModel.consumeError()
         }
     }
-    
+
     AllergensContent(
         allergens = allergens,
         onAllergenClick = { viewModel.toggleAllergen(it) },
@@ -85,8 +87,8 @@ fun AllergensContent(
     onDoneClick: () -> Unit
 ) {
     Column(Modifier.fillMaxSize().padding(16.dp, 30.dp, 16.dp, 18.dp)) {
-        Text("Выберите ваши аллергены", style = MaterialTheme.typography.headlineMedium)
-        Text("Это поможет предупреждать вас об опасности", color = Color.Gray)
+        Text("Выберите ваши аллергены", style = MaterialTheme.typography.headlineSmall)
+        Text("Это поможет предупреждать об опасности", color = Color.Gray)
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -113,7 +115,7 @@ fun AllergensContent(
 @Composable
 fun AllergenCard(allergen: Allergen, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth().aspectRatio(1f).clickable { onClick() },
+        modifier = Modifier.fillMaxWidth().height(150.dp).clickable { onClick() },
         border = BorderStroke(
             2.dp,
             if (allergen.isSelected) MaterialTheme.colorScheme.primary else Color.LightGray
@@ -127,12 +129,14 @@ fun AllergenCard(allergen: Allergen, onClick: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                painter = painterResource(id = allergen.iconRes),
+            Image(
+                painter = painterResource(allergen.iconRes),
                 contentDescription = allergen.name,
-                modifier = Modifier.size(64.dp),
-                tint = if (allergen.isSelected) MaterialTheme.colorScheme.primary else Color.Black
+                modifier = Modifier.size(64.dp)
             )
+
+            Spacer(Modifier.height(12.dp))
+
             Text(allergen.name, fontWeight = FontWeight.Medium)
         }
     }
