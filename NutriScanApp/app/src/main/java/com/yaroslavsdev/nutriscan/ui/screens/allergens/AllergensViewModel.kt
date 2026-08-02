@@ -21,10 +21,10 @@ class AllergensViewModel(private val repository: AuthRepository) : ViewModel() {
         Allergen("eggs", "Яйца", R.drawable.ic_eggs),
         Allergen("gluten", "Глютен", R.drawable.ic_gluten),
         Allergen("peanuts", "Арахис", R.drawable.ic_peanuts),
-        Allergen("tree_nuts", "Орехи", R.drawable.ic_launcher_foreground),
-        Allergen("soya", "Соя", R.drawable.ic_launcher_foreground),
+        Allergen("tree_nuts", "Орехи", R.drawable.ic_tree_nuts),
+        Allergen("soya", "Соя", R.drawable.ic_soybean),
         Allergen("fish", "Рыба", R.drawable.ic_fish),
-        Allergen("seafood", "Морепродукты", R.drawable.ic_launcher_foreground),
+        Allergen("seafood", "Морепродукты", R.drawable.ic_seafood),
         Allergen("sesame", "Кунжут", R.drawable.ic_sesame)
     ))
     val allergens = _allergens.asStateFlow()
