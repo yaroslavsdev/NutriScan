@@ -71,14 +71,17 @@ def get_user_allergens(current_user: models.User = Depends(dependencies.get_curr
 
 # Обновить лимит калорий
 @router.post("/calories")
-def save_user_allergens(
+def save_user_calorie_goal(
     data: schemas.NutritionUpdate,
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(dependencies.get_current_user)
 ):
-    current_user.user_allergens = data.daily_calorie_goal
+    current_user.daily_calorie_goal = data.daily_calorie_goal
 
     db.commit()
     db.refresh(current_user)
 
-    return {"status": "success", "daily_calorie_goal": current_user.daily_calorie_goal}
+    return {
+        "status": "success",
+        "daily_calorie_goal": current_user.daily_calorie_goal
+    }

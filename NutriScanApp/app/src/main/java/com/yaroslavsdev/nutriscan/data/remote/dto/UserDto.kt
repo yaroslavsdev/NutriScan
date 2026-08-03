@@ -12,5 +12,5 @@ data class AllergensUpdateDto(
 )
 
 data class CaloriesUpdateDto(
-    val dailyCalorieGoal: Int
+    val daily_calorie_goal: Int
 )
