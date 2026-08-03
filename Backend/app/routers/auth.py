@@ -43,7 +43,8 @@ def get_me(current_user: models.User = Depends(dependencies.get_current_user)):
     return {
         "username": current_user.username,
         "email": current_user.email,
-        "allergens": current_user.user_allergens or []
+        "allergens": current_user.user_allergens or [],
+        "dailyCalorieGoal": current_user.daily_calorie_goal
     }
 
 
@@ -66,3 +67,18 @@ def save_user_allergens(
 @router.get("/allergens")
 def get_user_allergens(current_user: models.User = Depends(dependencies.get_current_user)):
     return {"allergens": current_user.user_allergens or []}
+
+
+# Обновить лимит калорий
+@router.post("/calories")
+def save_user_allergens(
+    data: schemas.NutritionUpdate,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(dependencies.get_current_user)
+):
+    current_user.user_allergens = data.daily_calorie_goal
+
+    db.commit()
+    db.refresh(current_user)
+
+    return {"status": "success", "daily_calorie_goal": current_user.daily_calorie_goal}

@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
 
 class Nutrition(BaseModel):
     calories: float
@@ -44,3 +45,6 @@ class Token(BaseModel):
 
 class AllergensUpdate(BaseModel):
     allergens: list[str]
+
+class NutritionUpdate(BaseModel):
+    daily_calorie_goal: int = Field(ge=500, le=10000)

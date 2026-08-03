@@ -11,7 +11,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=False)
     user_allergens = Column(ARRAY(String), default=[])
-
+    daily_calorie_goal = Column(Integer, nullable=False, default=2000)
 
 # 2. Таблица Продуктов
 class Product(Base):
