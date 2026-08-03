@@ -67,16 +67,22 @@ fun NutritionContent(
         Text("Установите цель по потреблению калорий на день", style = MaterialTheme.typography.headlineSmall)
 
         var text by remember {
-            mutableStateOf(dailyCalorieGoal.toString())
+            mutableStateOf("")
+        }
+
+        LaunchedEffect(dailyCalorieGoal) {
+            text = dailyCalorieGoal.toString()
         }
 
         OutlinedTextField(
             value = text,
             onValueChange = { newText ->
-                if (newText.all { it.isDigit() }) {
-                    text = newText
-
-                    newText.toIntOrNull()?.let {
+                if (newText.length <= 5 &&
+                    newText.all { it.isDigit() }
+                ) {
+                    val cleaned = newText.trimStart('0')
+                    text = cleaned
+                    cleaned.toIntOrNull()?.let {
                         onCalorieChange(it)
                     }
                 }

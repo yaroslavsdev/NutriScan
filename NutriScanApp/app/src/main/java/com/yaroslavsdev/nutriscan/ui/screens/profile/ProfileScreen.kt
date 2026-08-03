@@ -45,6 +45,7 @@ fun ProfileScreen(
         profile?.let {
             Text("Имя: ${it.username}", fontWeight = FontWeight.Bold)
             Text("Почта: ${it.email}", fontWeight = FontWeight.Bold)
+            Text("Лимит калорий: ${it.dailyCalorieGoal}", fontWeight = FontWeight.Bold)
         }
 
         Spacer(modifier = Modifier.height(32.dp))

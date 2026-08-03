@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
 
-
 class Nutrition(BaseModel):
     calories: float
     proteins: float
