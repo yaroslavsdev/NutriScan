@@ -3,6 +3,7 @@ package com.yaroslavsdev.nutriscan.data.remote.api
 import com.yaroslavsdev.nutriscan.data.remote.dto.AllergensUpdateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.AuthRequest
 import com.yaroslavsdev.nutriscan.data.remote.dto.AuthResponse
+import com.yaroslavsdev.nutriscan.data.remote.dto.CaloriesUpdateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.UserProfileDto
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -19,5 +20,8 @@ interface AuthApi {
     suspend fun getMe(): UserProfileDto
 
     @POST("auth/allergens")
-    suspend fun saveAllergens(@Body request: AllergensUpdateDto): Unit
+    suspend fun saveAllergens(@Body request: AllergensUpdateDto)
+
+    @POST("auth/calories")
+    suspend fun saveCalories(@Body request: CaloriesUpdateDto)
 }

@@ -10,6 +10,7 @@ import com.yaroslavsdev.nutriscan.data.repository.HistoryRepository
 import com.yaroslavsdev.nutriscan.data.repository.ProductRepository
 import com.yaroslavsdev.nutriscan.ui.screens.allergens.AllergensViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.auth.AuthViewModel
+import com.yaroslavsdev.nutriscan.ui.screens.nutrition.NutritionViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.product.ProductViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.profile.ProfileViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.scan.ScanViewModel
@@ -33,5 +34,6 @@ val appModule = module {
     viewModelOf(::ProductViewModel)
     viewModelOf(::ScanViewModel)
     viewModelOf(::AllergensViewModel)
+    viewModelOf(::NutritionViewModel)
     viewModelOf(::ProfileViewModel)
 }

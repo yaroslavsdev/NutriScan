@@ -49,6 +49,7 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
+
         Button(
             onClick = {
                 navController.navigate("${Screen.AllergensScreen.route}/false")
@@ -59,7 +60,19 @@ fun ProfileScreen(
             Text("Настроить аллергены")
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(
+            onClick = {
+                navController.navigate(Screen.NutritionScreen.route)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large
+        ) {
+            Text("Параметры питания")
+        }
+
+        Spacer(modifier = Modifier.height(18.dp))
 
         OutlinedButton(
             onClick = {

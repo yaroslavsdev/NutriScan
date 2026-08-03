@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.yaroslavsdev.nutriscan.data.local.TokenManager
 import com.yaroslavsdev.nutriscan.ui.screens.allergens.AllergensScreen
 import com.yaroslavsdev.nutriscan.ui.screens.auth.AuthScreen
+import com.yaroslavsdev.nutriscan.ui.screens.nutrition.NutritionScreen
 import org.koin.compose.koinInject
 
 @Composable
@@ -51,6 +52,12 @@ fun AppNavigation(
 
         composable(Screen.Main.route) {
             MainContentScreen(rootNavController = navController)
+        }
+
+        composable(Screen.NutritionScreen.route) {
+            NutritionScreen(
+                navController = navController
+            )
         }
     }
 }

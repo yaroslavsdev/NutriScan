@@ -44,6 +44,7 @@ import com.yaroslavsdev.nutriscan.domain.model.Allergen
 import org.koin.androidx.compose.koinViewModel
 import com.yaroslavsdev.nutriscan.R
 import com.yaroslavsdev.nutriscan.ui.navigation.Screen
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun AllergensScreen(
@@ -54,10 +55,11 @@ fun AllergensScreen(
     val context = LocalContext.current
     val allergens by viewModel.allergens.collectAsState()
     val isError by viewModel.isError.collectAsState()
+    val networkErrorMessage = stringResource(R.string.error_network_save)
 
     LaunchedEffect(isError) {
         if (isError && allergens.isNotEmpty()) {
-            Toast.makeText(context, "Ошибка сети. Не удалось сохранить.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, networkErrorMessage, Toast.LENGTH_SHORT).show()
             viewModel.consumeError()
         }
     }

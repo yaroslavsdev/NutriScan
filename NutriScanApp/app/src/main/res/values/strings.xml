@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NutriScan</string>
+    <string name="error_network_save">Ошибка сети. Не удалось сохранить.</string>
 </resources>

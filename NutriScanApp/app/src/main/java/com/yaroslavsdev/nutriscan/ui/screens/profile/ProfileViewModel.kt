@@ -1,6 +1,5 @@
 package com.yaroslavsdev.nutriscan.ui.screens.profile
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yaroslavsdev.nutriscan.data.local.TokenManager
