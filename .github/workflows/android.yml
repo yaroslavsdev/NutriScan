@@ -1,4 +1,4 @@
-name: Build & Sign NutriScan APK
+name: Build and Sign NutriScan APK
 
 on:
   push:
