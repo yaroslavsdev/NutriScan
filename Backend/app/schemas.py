@@ -31,14 +31,15 @@ class ProductResponse(BaseModel):
 
 class ScanHistoryItem(BaseModel):
     id: int
+    status: str
     barcode: str
-    name: str
-    brand: str | None
-    ingredients: str
-    calories: float
-    proteins: float
-    fats: float
-    carbs: float
+    name: str | None = None
+    brand: str | None = None
+    ingredients: str | None = None
+    calories: float | None = None
+    proteins: float | None = None
+    fats: float | None = None
+    carbs: float | None = None
     scan_time: datetime
 
     class Config:

@@ -5,13 +5,12 @@ from sqlalchemy.orm import Session
 from app import models, dependencies
 from app.database import get_db
 from app.schemas import *
-from sqlalchemy import desc
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
 
 # Добавление товара в базу
-@router.post("")
+@router.post("", response_model=ProductResponse)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     db_product = models.Product(
         barcode=product.barcode,
@@ -67,9 +66,9 @@ def import_products(
         if item["barcode"] not in existing
     ]
 
-    BATCH_SIZE = 500
-    for i in range(0, len(to_insert), BATCH_SIZE):
-        db.bulk_save_objects(to_insert[i:i + BATCH_SIZE])
+    batch_size = 500
+    for i in range(0, len(to_insert), batch_size):
+        db.bulk_save_objects(to_insert[i:i + batch_size])
         db.flush()
 
     db.commit()
@@ -77,7 +76,7 @@ def import_products(
 
 
 # Получение одного товара
-@router.get("/{barcode}")
+@router.get("/{barcode}", response_model=ProductResponse)
 def get_product_by_barcode(
     barcode: str,
     db: Session = Depends(get_db),
@@ -85,29 +84,29 @@ def get_product_by_barcode(
 ):
     product = db.query(models.Product).filter(models.Product.barcode == barcode).first()
 
-    if product:
-        db.add(models.ScanHistory(
-            user_id=current_user.id,
-            product_id=product.id,
-            status="success",
-        ))
-        db.flush()
+    db.add(models.ScanHistory(
+        user_id=current_user.id,
+        product_id=product.id if product else None,
+        scanned_barcode=barcode if not product else None,
+        status="success" if product else "not_found",
+    ))
+    db.flush()
 
-        old_ids = (
-            db.query(models.ScanHistory.id)
-            .filter(models.ScanHistory.user_id == current_user.id)
-            .order_by(models.ScanHistory.scan_time.desc())
-            .offset(100)
-            .all()
-        )
-        old_ids = [row.id for row in old_ids]
+    old_ids = (
+        db.query(models.ScanHistory.id)
+        .filter(models.ScanHistory.user_id == current_user.id)
+        .order_by(models.ScanHistory.scan_time.desc())
+        .offset(100)
+        .all()
+    )
+    old_ids = [row.id for row in old_ids]
 
-        if old_ids:
-            db.query(models.ScanHistory).filter(
-                models.ScanHistory.id.in_(old_ids)
-            ).delete(synchronize_session=False)
+    if old_ids:
+        db.query(models.ScanHistory).filter(
+            models.ScanHistory.id.in_(old_ids)
+        ).delete(synchronize_session=False)
 
-        db.commit()
+    db.commit()
 
     if not product:
         raise HTTPException(status_code=404, detail="Товар не найден")
@@ -124,31 +123,30 @@ def get_scan_history(
 ):
     rows = (
         db.query(models.ScanHistory, models.Product)
-        .join(models.Product, models.ScanHistory.product_id == models.Product.id)
-        .filter(
-            models.ScanHistory.user_id == current_user.id,
-            models.ScanHistory.status == "success",
-        )
-        .order_by(desc(models.ScanHistory.scan_time))
+        .outerjoin(models.Product, models.ScanHistory.product_id == models.Product.id)
+        .filter(models.ScanHistory.user_id == current_user.id)
+        .order_by(models.ScanHistory.scan_time.desc())
         .limit(limit)
         .all()
     )
 
-    return [
-        ScanHistoryItem(
+    result = []
+    for scan, product in rows:
+        result.append(ScanHistoryItem(
             id=scan.id,
-            barcode=product.barcode,
-            name=product.name,
-            brand=product.brand,
-            ingredients=product.ingredients,
-            calories=product.calories,
-            proteins=product.proteins,
-            fats=product.fats,
-            carbs=product.carbs,
+            status=scan.status,
+            barcode=product.barcode if product else scan.scanned_barcode,
+            name=product.name if product else None,
+            brand=product.brand if product else None,
+            ingredients=product.ingredients if product else None,
+            calories=product.calories if product else None,
+            proteins=product.proteins if product else None,
+            fats=product.fats if product else None,
+            carbs=product.carbs if product else None,
             scan_time=scan.scan_time,
-        )
-        for scan, product in rows
-    ]
+        ))
+
+    return result
 
 
 # Получение списка товаров
