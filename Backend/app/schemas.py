@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 class Nutrition(BaseModel):
     calories: float
@@ -24,6 +25,21 @@ class ProductResponse(BaseModel):
     proteins: float
     fats: float
     carbs: float
+
+    class Config:
+        from_attributes = True
+
+class ScanHistory(BaseModel):
+    id: int
+    barcode: str
+    name: str
+    brand: str | None
+    ingredients: str
+    calories: float
+    proteins: float
+    fats: float
+    carbs: float
+    scan_time: datetime
 
     class Config:
         from_attributes = True

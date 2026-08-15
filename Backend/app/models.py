@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func, ARRAY
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func, ARRAY, Index
 from app.database import Base
 
 
@@ -36,6 +36,19 @@ class ScanHistory(Base):
     __tablename__ = "scan_history"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    product_barcode = Column(String)
-    scan_time = Column(DateTime(timezone=True), server_default=func.now())
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    status = Column(String, nullable=False, default="success")
+    scan_time = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    __table_args__ = (
+        Index("index_scan_history_user_time", "user_id", "scan_time"),
+    )
+
+# class ScanHistory(Base):
+#     __tablename__ = "scan_history"
+#
+#     id = Column(Integer, primary_key=True, index=True)
+#     user_id = Column(Integer, ForeignKey("users.id"))
+#     product_barcode = Column(String)
+#     scan_time = Column(DateTime(timezone=True), server_default=func.now())
