@@ -21,13 +21,13 @@ class ProfileViewModel(
         fetchProfile()
     }
 
-    private fun fetchProfile() {
+    fun fetchProfile() {
         viewModelScope.launch {
             try {
                 val profile = authApi.getMe()
                 _userProfile.value = profile
             } catch (e: Exception) {
-
+                //TODO
             }
         }
     }

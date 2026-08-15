@@ -1,3 +1,5 @@
+package com.yaroslavsdev.nutriscan.ui.screens.history
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme

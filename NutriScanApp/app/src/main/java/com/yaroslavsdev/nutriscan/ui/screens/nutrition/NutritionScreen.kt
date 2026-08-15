@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.yaroslavsdev.nutriscan.R
 import org.koin.androidx.compose.koinViewModel
-import org.koin.viewmodel.factory.KoinViewModelFactory
 
 @Composable
 fun NutritionScreen(
