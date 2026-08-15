@@ -1,9 +1,11 @@
 import json
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
-from app import models
+
+from app import models, dependencies
 from app.database import get_db
 from app.schemas import *
+from sqlalchemy import desc
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -76,11 +78,77 @@ def import_products(
 
 # Получение одного товара
 @router.get("/{barcode}")
-def get_product_by_barcode(barcode: str, db: Session = Depends(get_db)):
+def get_product_by_barcode(
+    barcode: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(dependencies.get_current_user),
+):
     product = db.query(models.Product).filter(models.Product.barcode == barcode).first()
+
+    if product:
+        db.add(models.ScanHistory(
+            user_id=current_user.id,
+            product_id=product.id,
+            status="success",
+        ))
+        db.flush()
+
+        old_ids = (
+            db.query(models.ScanHistory.id)
+            .filter(models.ScanHistory.user_id == current_user.id)
+            .order_by(models.ScanHistory.scan_time.desc())
+            .offset(100)
+            .all()
+        )
+        old_ids = [row.id for row in old_ids]
+
+        if old_ids:
+            db.query(models.ScanHistory).filter(
+                models.ScanHistory.id.in_(old_ids)
+            ).delete(synchronize_session=False)
+
+        db.commit()
+
     if not product:
         raise HTTPException(status_code=404, detail="Товар не найден")
+
     return product
+
+
+# Получение истории сканирований пользователя
+@router.get("/history/scans", response_model=list[ScanHistoryItem])
+def get_scan_history(
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(dependencies.get_current_user),
+):
+    rows = (
+        db.query(models.ScanHistory, models.Product)
+        .join(models.Product, models.ScanHistory.product_id == models.Product.id)
+        .filter(
+            models.ScanHistory.user_id == current_user.id,
+            models.ScanHistory.status == "success",
+        )
+        .order_by(desc(models.ScanHistory.scan_time))
+        .limit(limit)
+        .all()
+    )
+
+    return [
+        ScanHistoryItem(
+            id=scan.id,
+            barcode=product.barcode,
+            name=product.name,
+            brand=product.brand,
+            ingredients=product.ingredients,
+            calories=product.calories,
+            proteins=product.proteins,
+            fats=product.fats,
+            carbs=product.carbs,
+            scan_time=scan.scan_time,
+        )
+        for scan, product in rows
+    ]
 
 
 # Получение списка товаров

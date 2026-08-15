@@ -29,7 +29,7 @@ class ProductResponse(BaseModel):
     class Config:
         from_attributes = True
 
-class ScanHistory(BaseModel):
+class ScanHistoryItem(BaseModel):
     id: int
     barcode: str
     name: str
