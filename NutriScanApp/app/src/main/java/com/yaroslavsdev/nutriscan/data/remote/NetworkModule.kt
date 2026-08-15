@@ -1,7 +1,6 @@
 package com.yaroslavsdev.nutriscan.data.remote
 
 import com.yaroslavsdev.nutriscan.data.local.TokenManager
-import com.yaroslavsdev.nutriscan.data.remote.api.AuthApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

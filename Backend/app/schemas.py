@@ -11,7 +11,6 @@ class ProductCreate(BaseModel):
     name: str
     brand: str | None = None
     ingredients: str
-
     nutrition: Nutrition
 
 class ProductResponse(BaseModel):

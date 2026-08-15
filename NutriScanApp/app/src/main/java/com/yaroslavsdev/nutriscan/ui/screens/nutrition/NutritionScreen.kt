@@ -2,8 +2,10 @@ package com.yaroslavsdev.nutriscan.ui.screens.nutrition
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -17,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -63,8 +66,15 @@ fun NutritionContent(
     onCalorieChange: (Int) -> Unit,
     onDoneClick: () -> Unit
 ) {
-    Column(Modifier.fillMaxSize().padding(16.dp, 30.dp, 16.dp, 18.dp)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(16.dp, 30.dp, 16.dp, 18.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text("Установите цель по потреблению калорий на день", style = MaterialTheme.typography.headlineSmall)
+
+        Spacer(modifier = Modifier.height(30.dp))
 
         var text by remember {
             mutableStateOf("")
@@ -74,12 +84,13 @@ fun NutritionContent(
             text = dailyCalorieGoal.toString()
         }
 
+        val calorieValue = text.toIntOrNull()
+        val isInvalid = calorieValue == null || calorieValue !in 500..10000
+
         OutlinedTextField(
             value = text,
             onValueChange = { newText ->
-                if (newText.length <= 5 &&
-                    newText.all { it.isDigit() }
-                ) {
+                if (newText.length <= 5 && newText.all { it.isDigit() }) {
                     val cleaned = newText.trimStart('0')
                     text = cleaned
                     cleaned.toIntOrNull()?.let {
@@ -87,6 +98,7 @@ fun NutritionContent(
                     }
                 }
             },
+            modifier = Modifier.fillMaxWidth(),
             label = {
                 Text("Норма калорий")
             },
@@ -95,11 +107,17 @@ fun NutritionContent(
             ),
             suffix = {
                 Text("ккал")
+            },
+            supportingText = {
+                if (isInvalid) {
+                    Text("Введите значение от 500 до 10000")
+                }
             }
         )
 
         Button(
             onClick = onDoneClick,
+            enabled = !isInvalid,
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.large
         ) {
