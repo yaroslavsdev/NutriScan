@@ -3,13 +3,13 @@ package com.yaroslavsdev.nutriscan.di
 import com.yaroslavsdev.nutriscan.data.local.TokenManager
 import com.yaroslavsdev.nutriscan.data.remote.NetworkModule
 import com.yaroslavsdev.nutriscan.data.remote.api.AuthApi
-import com.yaroslavsdev.nutriscan.data.remote.api.ProductApi
+import com.yaroslavsdev.nutriscan.data.remote.api.ProductsApi
 import com.yaroslavsdev.nutriscan.data.repository.AuthRepository
 import com.yaroslavsdev.nutriscan.data.repository.FoodDiaryRepository
-import com.yaroslavsdev.nutriscan.data.repository.HistoryRepository
-import com.yaroslavsdev.nutriscan.data.repository.ProductRepository
+import com.yaroslavsdev.nutriscan.data.repository.ProductsRepository
 import com.yaroslavsdev.nutriscan.ui.screens.allergens.AllergensViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.auth.AuthViewModel
+import com.yaroslavsdev.nutriscan.ui.screens.history.CheckHistoryViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.nutrition.NutritionViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.product.ProductViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.profile.ProfileViewModel
@@ -22,12 +22,11 @@ val appModule = module {
     single { TokenManager(androidContext()) }
 
     single { NetworkModule.createService(AuthApi::class.java, get()) }
-    single { NetworkModule.createService(ProductApi::class.java, get()) }
+    single { NetworkModule.createService(ProductsApi::class.java, get()) }
 
-    single { ProductRepository(get(), get()) }
+    single { ProductsRepository(get(), get()) }
     single { AuthRepository(get(), get()) }
 
-    single { HistoryRepository }
     single { FoodDiaryRepository }
 
     viewModelOf(::AuthViewModel)
@@ -36,4 +35,5 @@ val appModule = module {
     viewModelOf(::AllergensViewModel)
     viewModelOf(::NutritionViewModel)
     viewModelOf(::ProfileViewModel)
+    viewModelOf(::CheckHistoryViewModel)
 }

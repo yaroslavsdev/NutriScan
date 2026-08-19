@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.yaroslavsdev.nutriscan.data.test.TestFoodDiaryData
-import com.yaroslavsdev.nutriscan.data.test.TestHistoryData
 import com.yaroslavsdev.nutriscan.ui.NutriScanApp
 import com.yaroslavsdev.nutriscan.ui.theme.NutriScanTheme
 
@@ -15,7 +14,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         // Подгрузка данных для тестирования
-        TestHistoryData.addTestHistory()
         TestFoodDiaryData.addTestDiaryData()
 
         setContent {

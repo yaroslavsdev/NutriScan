@@ -20,25 +20,41 @@ fun HistoryCard(item: ScannedProductUi) {
             .padding(bottom = 12.dp)
     ) {
         Column(Modifier.padding(12.dp)) {
-            // Название
-            Text(
-                text = item.name,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium
-            )
 
-            // Штрих-код
-            Text(
-                text = "Штрих-код: ${item.barcode}",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
-            )
+            if (item.status == "not_found") {
+                Text(
+                    text = "Товар не найден",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.Gray
+                )
 
-            Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Штрих-код: ${item.barcode}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+            } else {
+                Text(
+                    text = item.name ?: "",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium
+                )
 
-            Text("Калории: ${item.calories}")
-            val capitalizedIngredients = item.ingredients.replaceFirstChar { it.uppercase() }
-            Text(capitalizedIngredients)
+                Text(
+                    text = "Штрих-код: ${item.barcode}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Text("Калории: ${item.calories}")
+
+                val ingredients = item.ingredients ?: ""
+                val capitalizedIngredients = ingredients.replaceFirstChar { it.uppercase() }
+                Text(capitalizedIngredients)
+            }
 
             Spacer(Modifier.height(8.dp))
 
