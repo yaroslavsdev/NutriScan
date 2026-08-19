@@ -1,6 +1,6 @@
 package com.yaroslavsdev.nutriscan.data.remote.dto
 
-import java.time.LocalDateTime
+import java.time.Instant
 
 data class ScanHistoryDto(
     val id: Int,
@@ -13,5 +13,5 @@ data class ScanHistoryDto(
     val proteins: Float?,
     val fats: Float?,
     val carbs: Float?,
-    val scan_time: LocalDateTime
+    val scan_time: Instant
 )

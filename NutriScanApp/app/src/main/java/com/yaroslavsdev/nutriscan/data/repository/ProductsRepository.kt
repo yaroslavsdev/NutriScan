@@ -7,6 +7,7 @@ import com.yaroslavsdev.nutriscan.domain.model.Product
 import com.yaroslavsdev.nutriscan.ui.model.ScannedProductUi
 import okio.IOException
 import retrofit2.HttpException
+import java.time.ZoneId
 
 class ProductsRepository(
     private val api: ProductsApi,
@@ -37,7 +38,7 @@ class ProductsRepository(
                     name = dto.name,
                     ingredients = dto.ingredients,
                     calories = dto.calories,
-                    scannedAt = dto.scan_time
+                    scannedAt = dto.scan_time.atZone(ZoneId.systemDefault()).toLocalDateTime()
                 )
             }
             Result.success(items)
