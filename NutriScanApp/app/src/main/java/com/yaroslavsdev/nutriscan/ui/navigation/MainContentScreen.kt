@@ -13,7 +13,6 @@ import androidx.navigation.navArgument
 import com.yaroslavsdev.nutriscan.ui.components.BottomBar
 import com.yaroslavsdev.nutriscan.ui.screens.HomeScreen
 import com.yaroslavsdev.nutriscan.ui.screens.addProduct.AddProductScreen
-import com.yaroslavsdev.nutriscan.ui.screens.addProduct.AddProductViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.diary.FoodDiaryScreen
 import com.yaroslavsdev.nutriscan.ui.screens.history.CheckHistoryScreen
 import com.yaroslavsdev.nutriscan.ui.screens.product.ProductScreen

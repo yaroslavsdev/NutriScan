@@ -82,14 +82,13 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
-    // OkHttp для логирования
+    // OkHttp
     implementation(libs.logging.interceptor)
 
     // Security
     implementation(libs.androidx.security.crypto)
 
-    // Koin для Android
+    // Koin
     implementation("io.insert-koin:koin-android:4.2.0")
-    // Koin для Jetpack Compose
     implementation("io.insert-koin:koin-androidx-compose:4.2.0")
 }

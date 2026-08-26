@@ -17,6 +17,9 @@ class ProfileViewModel(
     private val _userProfile = MutableStateFlow<UserProfileDto?>(null)
     val userProfile = _userProfile.asStateFlow()
 
+    private val _isError = MutableStateFlow(false)
+    val isError = _isError.asStateFlow()
+
     init {
         fetchProfile()
     }
@@ -27,9 +30,13 @@ class ProfileViewModel(
                 val profile = authApi.getMe()
                 _userProfile.value = profile
             } catch (e: Exception) {
-                //TODO
+                _isError.value = true
             }
         }
+    }
+
+    fun consumeError() {
+        _isError.value = false
     }
 
     fun logout(onNavigateToAuth: () -> Unit) {

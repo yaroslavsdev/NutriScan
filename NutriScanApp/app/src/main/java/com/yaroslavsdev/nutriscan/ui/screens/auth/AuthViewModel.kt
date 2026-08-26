@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yaroslavsdev.nutriscan.data.local.TokenManager
 import com.yaroslavsdev.nutriscan.data.repository.AuthRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -14,14 +13,12 @@ import retrofit2.HttpException
 class AuthViewModel(
     private val repository: AuthRepository
 ) : ViewModel() {
-    // Поля ввода
     var loginEmail by mutableStateOf("")
     var loginPassword by mutableStateOf("")
     var regName by mutableStateOf("")
     var regEmail by mutableStateOf("")
     var regPassword by mutableStateOf("")
 
-    // Ошибки валидации
     var emailError by mutableStateOf<String?>(null)
     var passwordError by mutableStateOf<String?>(null)
     var regNameError by mutableStateOf<String?>(null)
@@ -29,7 +26,6 @@ class AuthViewModel(
     var isLoading by mutableStateOf(false)
     var serverError by mutableStateOf<String?>(null)
 
-    // Фильтрация ввода
     fun updateLoginEmail(input: String) {
         loginEmail = input.replace("\n", "").replace(" ", "").trim()
         emailError = null

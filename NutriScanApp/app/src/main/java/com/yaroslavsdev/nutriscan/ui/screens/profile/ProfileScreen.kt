@@ -1,5 +1,6 @@
 package com.yaroslavsdev.nutriscan.ui.screens.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 
@@ -37,6 +39,16 @@ fun ProfileScreen(
 ) {
     val profile by viewModel.userProfile.collectAsState()
     var isNavigating by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val isError by viewModel.isError.collectAsState()
+
+    LaunchedEffect(isError) {
+        if (isError) {
+            Toast.makeText(context, "Не удалось загрузить профиль", Toast.LENGTH_SHORT).show()
+            viewModel.consumeError()
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.fetchProfile()
