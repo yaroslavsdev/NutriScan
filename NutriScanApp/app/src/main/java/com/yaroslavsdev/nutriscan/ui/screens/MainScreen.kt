@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import com.yaroslavsdev.nutriscan.ui.theme.NutriScanTheme
 
 @Composable
@@ -32,7 +33,7 @@ fun HomeScreen(navController: NavHostController) {
         Spacer(Modifier.padding(vertical = 16.dp))
 
         Button(
-            onClick = { navController.navigate("scanner") },
+            onClick = { navController.navigate(Screen.ScannerScreen.route) },
             shape = MaterialTheme.shapes.large
         ) {
             Text("Сканировать товар")

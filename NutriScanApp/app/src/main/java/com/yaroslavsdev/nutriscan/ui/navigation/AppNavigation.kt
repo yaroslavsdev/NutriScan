@@ -2,7 +2,6 @@ package com.yaroslavsdev.nutriscan.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -39,7 +38,7 @@ fun AppNavigation(
         }
 
         composable(
-            route = "allergens_screen/{fromRegistration}",
+            route = Screen.AllergensScreen.route,
             arguments = listOf(navArgument("fromRegistration") { type = NavType.BoolType })
         ) { backStackEntry ->
             val fromRegistration = backStackEntry.arguments?.getBoolean("fromRegistration") ?: false

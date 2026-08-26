@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -37,7 +38,7 @@ fun ScannerScreen(
         }
 
         state.barcode != null -> {
-            navController.navigate("product/${state.barcode}")
+            navController.navigate(Screen.ProductScreen.createRoute(state.barcode!!))
         }
 
         else -> {

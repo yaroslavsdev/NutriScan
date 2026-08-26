@@ -11,8 +11,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.yaroslavsdev.nutriscan.ui.components.BottomBar
-import com.yaroslavsdev.nutriscan.ui.navigation.BottomNavItem
 import com.yaroslavsdev.nutriscan.ui.screens.HomeScreen
+import com.yaroslavsdev.nutriscan.ui.screens.addProduct.AddProductScreen
+import com.yaroslavsdev.nutriscan.ui.screens.addProduct.AddProductViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.diary.FoodDiaryScreen
 import com.yaroslavsdev.nutriscan.ui.screens.history.CheckHistoryScreen
 import com.yaroslavsdev.nutriscan.ui.screens.product.ProductScreen
@@ -38,16 +39,34 @@ fun MainContentScreen(rootNavController: NavHostController) {
             composable(BottomNavItem.History.route) { CheckHistoryScreen(bottomNavController) }
 
             composable(BottomNavItem.Profile.route) {
-                ProfileScreen(navController = rootNavController)
+                ProfileScreen(rootNavController)
             }
 
-            composable("scanner") { ScannerScreen(bottomNavController) }
+            composable(Screen.ScannerScreen.route) {
+                ScannerScreen(bottomNavController)
+            }
+
             composable(
-                route = "product/{barcode}",
+                route = Screen.ProductScreen.route,
                 arguments = listOf(navArgument("barcode") { type = NavType.StringType })
             ) { backStackEntry ->
                 val barcode = backStackEntry.arguments?.getString("barcode") ?: ""
-                ProductScreen(barcode = barcode, onBack = { bottomNavController.popBackStack() })
+                ProductScreen(
+                    barcode = barcode,
+                    navController = bottomNavController,
+                    onBack = { bottomNavController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = Screen.AddProductScreen.route,
+                arguments = listOf(navArgument("barcode") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val barcode = backStackEntry.arguments?.getString("barcode") ?: ""
+                AddProductScreen(
+                    barcode = barcode,
+                    navController = bottomNavController
+                )
             }
         }
     }
