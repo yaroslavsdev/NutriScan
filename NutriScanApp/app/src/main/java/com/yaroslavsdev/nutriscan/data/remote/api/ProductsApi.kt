@@ -1,5 +1,6 @@
 package com.yaroslavsdev.nutriscan.data.remote.api
 
+import com.yaroslavsdev.nutriscan.data.remote.dto.ProductCreateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.ProductDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.ScanHistoryDto
 import retrofit2.http.*
@@ -9,6 +10,11 @@ interface ProductsApi {
     suspend fun getProduct(
         @Path("barcode") barcode: String
     ) : ProductDto
+
+    @POST("products")
+    suspend fun addProduct(
+        @Body request: ProductCreateDto
+    ): ProductDto
 
     @GET("products/history/scans")
     suspend fun getScanHistory(

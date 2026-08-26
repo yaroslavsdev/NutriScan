@@ -1,5 +1,6 @@
 package com.yaroslavsdev.nutriscan.ui.screens.product
 
+import android.widget.Button
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.yaroslavsdev.nutriscan.ui.state.ProductState
 import org.koin.androidx.compose.koinViewModel
 
@@ -30,6 +32,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ProductScreen(
     barcode: String,
+    // navController: NavController,
     onBack: () -> Unit,
     viewModel: ProductViewModel = koinViewModel()
 ) {
@@ -84,7 +87,21 @@ fun ProductScreen(
                 }
 
                 ProductState.NotFound -> {
-                    Text("Товар не найден")
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("Продукт не найден в базе")
+                        Spacer(Modifier.height(12.dp))
+
+//                        Button(
+//                            onCLick = {
+//                                navController.navigate("addProduct/$barcode")
+//                            },
+//                            shape = MaterialTheme.shapes.large
+//                        ) {
+//                            Text("Добавить информацию о товаре")
+//                        }
+                    }
                 }
 
                 ProductState.NoConnection -> {

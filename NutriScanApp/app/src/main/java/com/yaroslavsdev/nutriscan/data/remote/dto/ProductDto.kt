@@ -14,7 +14,6 @@ data class ProductDto(
     val carbs: Float
 )
 
-
 fun ProductDto.toDomain(): Product {
     return Product(
         barcode = barcode,
@@ -27,3 +26,19 @@ fun ProductDto.toDomain(): Product {
         carbs = carbs
     )
 }
+
+
+data class NutritionDto(
+    val calories: Float,
+    val proteins: Float,
+    val fats: Float,
+    val carbs: Float
+)
+
+data class ProductCreateDto(
+    val barcode: String,
+    val name: String,
+    val brand: String?,
+    val ingredients: String,
+    val nutrition: NutritionDto
+)

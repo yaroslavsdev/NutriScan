@@ -2,6 +2,7 @@ package com.yaroslavsdev.nutriscan.data.repository
 
 import com.yaroslavsdev.nutriscan.data.local.TokenManager
 import com.yaroslavsdev.nutriscan.data.remote.api.ProductsApi
+import com.yaroslavsdev.nutriscan.data.remote.dto.ProductCreateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.toDomain
 import com.yaroslavsdev.nutriscan.domain.model.Product
 import com.yaroslavsdev.nutriscan.ui.model.ScannedProductUi
@@ -16,6 +17,21 @@ class ProductsRepository(
     suspend fun getProduct(barcode: String): Result<Product> {
         return try {
             val dto = api.getProduct(barcode)
+            Result.success(dto.toDomain())
+        } catch (e: HttpException) {
+            when (e.code()) {
+                401 -> Result.failure(Exception("UNAUTHORIZED"))
+                404 -> Result.failure(Exception("NOT_FOUND"))
+                else -> Result.failure(e)
+            }
+        } catch (e: IOException) {
+            Result.failure(Exception("NO_CONNECTION"))
+        }
+    }
+
+    suspend fun addProduct(product: ProductCreateDto) : Result<Product> {
+        return try {
+            val dto = api.addProduct(product)
             Result.success(dto.toDomain())
         } catch (e: HttpException) {
             when (e.code()) {
@@ -43,7 +59,7 @@ class ProductsRepository(
             }
             Result.success(items)
         } catch (e: HttpException) {
-            when(e.code()) {
+            when (e.code()) {
                 401 -> Result.failure(Exception("UNAUTHORIZED"))
                 else -> Result.failure(e)
             }
