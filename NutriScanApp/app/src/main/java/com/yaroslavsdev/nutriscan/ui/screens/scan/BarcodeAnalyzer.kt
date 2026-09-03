@@ -12,7 +12,6 @@ import com.google.mlkit.vision.common.InputImage
 class BarcodeAnalyzer(
     private val onResult: (String) -> Unit
 ) : ImageAnalysis.Analyzer {
-
     private val options = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
             Barcode.FORMAT_EAN_8,

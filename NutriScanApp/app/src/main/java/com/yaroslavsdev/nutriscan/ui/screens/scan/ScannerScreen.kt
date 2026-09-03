@@ -38,7 +38,10 @@ fun ScannerScreen(
         }
 
         state.barcode != null -> {
-            navController.navigate(Screen.ProductScreen.createRoute(state.barcode!!))
+            LaunchedEffect(state.barcode) {
+                navController.navigate(Screen.ProductScreen.createRoute(state.barcode!!))
+                viewModel.reset()
+            }
         }
 
         else -> {
@@ -54,6 +57,7 @@ fun ScannerScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .fillMaxHeight()
                         .aspectRatio(1f)
                         .padding(16.dp)
                 ) {

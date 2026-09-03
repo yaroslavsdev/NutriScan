@@ -84,7 +84,7 @@ class AuthViewModel(
             val result = repository.login(loginEmail, loginPassword)
 
             isLoading = false
-            result.onSuccess { authResponse ->
+            result.onSuccess {
                 onSuccess()
             }
             result.onFailure { exception ->
