@@ -21,8 +21,19 @@ class BarcodeAnalyzer(
 
     private val scanner = BarcodeScanning.getClient(options)
 
+    private var hasScanned = false
+    private val startTime = System.currentTimeMillis()
+    private val startDelayMillis = 1000
+
     @OptIn(ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
+        val timePassed = System.currentTimeMillis()
+
+        if (timePassed < startDelayMillis || hasScanned) {
+            imageProxy.close()
+            return
+        }
+
         val mediaImage = imageProxy.image ?: run {
             imageProxy.close()
             return
@@ -35,8 +46,11 @@ class BarcodeAnalyzer(
 
         scanner.process(image)
             .addOnSuccessListener { barcodes ->
-                barcodes.firstOrNull()?.rawValue?.let {
-                    onResult(it)
+                if (!hasScanned) {
+                    barcodes.firstOrNull()?.rawValue?.let {
+                        hasScanned = true
+                        onResult(it)
+                    }
                 }
             }
             .addOnCompleteListener {

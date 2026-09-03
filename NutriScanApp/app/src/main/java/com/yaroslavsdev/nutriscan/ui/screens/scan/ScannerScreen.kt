@@ -57,9 +57,8 @@ fun ScannerScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
-                        .aspectRatio(1f)
-                        .padding(16.dp)
+                        .weight(1f)
+                        .padding(horizontal = 16.dp, vertical = 24.dp)
                 ) {
                     CameraPreview(viewModel)
                 }
