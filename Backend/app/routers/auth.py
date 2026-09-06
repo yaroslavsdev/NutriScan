@@ -37,13 +37,27 @@ def login(user: schemas.UserLogin, db: Session = Depends(database.get_db)):
     return {"access_token": token, "token_type": "bearer"}
 
 
+# Получение аллергенов пользователя
+def get_user_allergen_names(db: Session, user_id: int) -> list[str]:
+    rows = (
+        db.query(models.Allergen.name)
+        .join(models.UserAllergen, models.UserAllergen.allergen_id == models.Allergen.id)
+        .filter(models.UserAllergen.user_id == user_id)
+        .all()
+    )
+    return [row.name for row in rows]
+
+
 # Получение информации о пользователе
 @router.get("/me")
-def get_me(current_user: models.User = Depends(dependencies.get_current_user)):
+def get_me(
+        db: Session = Depends(database.get_db()),
+        current_user: models.User = Depends(dependencies.get_current_user)
+):
     return {
         "username": current_user.username,
         "email": current_user.email,
-        "allergens": current_user.user_allergens or [],
+        "allergens": get_user_allergen_names(db, current_user.id),
         "dailyCalorieGoal": current_user.daily_calorie_goal
     }
 
@@ -55,18 +69,30 @@ def save_user_allergens(
         db: Session = Depends(database.get_db),
         current_user: models.User = Depends(dependencies.get_current_user)
 ):
-    current_user.user_allergens = data.allergens
+    db.query(models.UserAllergen).filter(
+        models.UserAllergen.user_id == current_user.id
+    ).delete()
+
+    allergens = db.query(models.Allergen).filter(
+        models.Allergen.name.in_(data.allergens)
+    ).all()
+
+    for allergen in allergens:
+        db.add(models.UserAllergen(user_id=current_user.id, allergen_id=allergen.id))
 
     db.commit()
-    db.refresh(current_user)
 
-    return {"status": "success", "saved_allergens": current_user.user_allergens}
+    saved_names = [allergen.name for allergen in allergens]
+    return {"status" : "success", "saved_allergens" : saved_names}
 
 
 # Получить список аллергенов
 @router.get("/allergens")
-def get_user_allergens(current_user: models.User = Depends(dependencies.get_current_user)):
-    return {"allergens": current_user.user_allergens or []}
+def get_user_allergens(
+        db: Session = Depends(database.get_db),
+        current_user: models.User = Depends(dependencies.get_current_user)
+):
+    return {"allergens": get_user_allergen_names(db, current_user.id)}
 
 
 # Обновить лимит калорий

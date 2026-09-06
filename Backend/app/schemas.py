@@ -20,11 +20,11 @@ class ProductResponse(BaseModel):
     name: str
     brand: str | None
     ingredients: str
-
     calories: float
     proteins: float
     fats: float
     carbs: float
+    matched_allergens: list[str] = []
 
     class Config:
         from_attributes = True
