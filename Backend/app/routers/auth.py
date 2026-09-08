@@ -51,7 +51,7 @@ def get_user_allergen_names(db: Session, user_id: int) -> list[str]:
 # Получение информации о пользователе
 @router.get("/me")
 def get_me(
-        db: Session = Depends(database.get_db()),
+        db: Session = Depends(database.get_db),
         current_user: models.User = Depends(dependencies.get_current_user)
 ):
     return {
