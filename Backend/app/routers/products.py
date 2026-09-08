@@ -75,6 +75,25 @@ def import_products(
     return {"added": len(to_insert), "skipped": len(data) - len(to_insert)}
 
 
+# Получение аллергенов для конкретного пользователя по составу продукта
+def get_matched_allergens(db: Session, ingredients: str, user_id: int) -> list[str]:
+    ingredients_lower = ingredients.lower()
+
+    rows = (db.query(models.Allergen.name, models.AllergenTrigger.trigger_word)
+        .join(models.AllergenTrigger, models.AllergenTrigger.allergen_id == models.Allergen.id)
+        .join(models.UserAllergen, models.UserAllergen.allergen_id == models.Allergen.id)
+        .filter(models.UserAllergen.user_id == user_id)
+        .all()
+    )
+
+    matched = set()
+    for name, trigger_word in rows:
+        if trigger_word.lower() in ingredients_lower:
+            matched.add(name)
+
+    return list(matched)
+
+
 # Получение одного товара
 @router.get("/{barcode}", response_model=ProductResponse)
 def get_product_by_barcode(
@@ -111,7 +130,20 @@ def get_product_by_barcode(
     if not product:
         raise HTTPException(status_code=404, detail="Товар не найден")
 
-    return product
+    matched_allergens = get_matched_allergens(db, product.ingredients, current_user.id)
+
+    return ProductResponse(
+        id=product.id,
+        barcode=product.barcode,
+        name=product.name,
+        brand=product.brand,
+        ingredients=product.ingredients,
+        calories=product.calories,
+        proteins=product.proteins,
+        fats=product.fats,
+        carbs=product.carbs,
+        matched_allergens=matched_allergens,
+    )
 
 
 # Получение истории сканирований пользователя
