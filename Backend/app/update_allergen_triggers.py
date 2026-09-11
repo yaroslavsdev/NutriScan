@@ -1,11 +1,6 @@
 from sqlalchemy.orm import Session
 from app import models
-
-ALLERGEN_TRIGGERS = {
-    "Молоко": ["молоко", "сливки"],
-    "Орехи": ["орех", "миндаль", "фундук", "арахис"]
-}
-
+from app.allergen_data import ALLERGEN_TRIGGERS
 
 def update_allergen_triggers(db: Session):
     for name, triggers in ALLERGEN_TRIGGERS.items():

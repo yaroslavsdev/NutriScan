@@ -145,9 +145,6 @@ fun AllergenCard(allergen: Allergen, onClick: () -> Unit) {
 }
 
 
-
-
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AllergensPreview() {
