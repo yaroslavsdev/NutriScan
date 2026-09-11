@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 
 from app import models, dependencies
+from app.allergen_data import NEGATION_WORDS
 from app.database import get_db
 from app.schemas import *
 
@@ -88,7 +89,16 @@ def get_matched_allergens(db: Session, ingredients: str, user_id: int) -> list[s
 
     matched = set()
     for name, trigger_word in rows:
-        if trigger_word.lower() in ingredients_lower:
+        trigger_lower = trigger_word.lower()
+        index = ingredients_lower.find(trigger_lower)
+
+        if index == -1:
+            continue
+
+        words_before = ingredients[max(0, index - 30):index]
+        is_negated = any(negative in words_before for negative in NEGATION_WORDS)
+
+        if not is_negated:
             matched.add(name)
 
     return list(matched)
