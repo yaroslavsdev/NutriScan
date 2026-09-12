@@ -20,9 +20,10 @@ fun SignUpTab(navController: NavController, viewModel: AuthViewModel) {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
-        Text("Создать профиль", style = MaterialTheme.typography.headlineMedium)
+        Spacer(Modifier.height(14.dp))
+        Text("Создать профиль", style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(14.dp))
 
         OutlinedTextField(

@@ -8,5 +8,6 @@ data class Product(
     val calories: Float,
     val proteins: Float,
     val fats: Float,
-    val carbs: Float
+    val carbs: Float,
+    val matchedAllergens: List<String> = emptyList()
 )

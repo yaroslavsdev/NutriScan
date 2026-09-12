@@ -1,5 +1,6 @@
 package com.yaroslavsdev.nutriscan.ui.screens.product
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.yaroslavsdev.nutriscan.ui.components.ProductInfoCard
 import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import com.yaroslavsdev.nutriscan.ui.state.ProductState
 import org.koin.androidx.compose.koinViewModel
@@ -61,7 +63,7 @@ fun ProductScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopCenter
         ) {
 
             when (state) {
@@ -75,24 +77,25 @@ fun ProductScreen(
                 is ProductState.Success -> {
                     val product = (state as ProductState.Success).product
 
-                    Column(
+                    ProductInfoCard(
+                        name = product.name,
+                        brand = product.brand,
+                        ingredients = product.ingredients,
+                        calories = product.calories,
+                        proteins = product.proteins,
+                        fats = product.fats,
+                        carbs = product.carbs,
+                        matchedAllergens = product.matchedAllergens,
                         modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(product.name, style = MaterialTheme.typography.titleLarge)
-                        Spacer(Modifier.height(8.dp))
-                        Text("Бренд: ${product.brand ?: "—"}")
-                        Text("Калории: ${product.calories}")
-                        Text("Белки: ${product.proteins}")
-                        Text("Жиры: ${product.fats}")
-                        Text("Углеводы: ${product.carbs}")
-                    }
+                    )
                 }
 
                 ProductState.NotFound -> {
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
-                        Text("Продукт не найден в базе")
+                        Text("Продукт не найден в базе, но вы можете самостоятельно добавить информацию о нём")
                         Spacer(Modifier.height(12.dp))
                         Button(
                             onClick = { navController.navigate(Screen.AddProductScreen.createRoute(barcode)) },

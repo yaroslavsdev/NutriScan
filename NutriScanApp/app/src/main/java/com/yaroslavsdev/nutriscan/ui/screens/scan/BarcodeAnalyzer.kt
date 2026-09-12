@@ -23,7 +23,7 @@ class BarcodeAnalyzer(
 
     private var hasScanned = false
     private val startTime = System.currentTimeMillis()
-    private val startDelay = 750
+    private val startDelay = 1200
 
     @OptIn(ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {

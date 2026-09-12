@@ -1,5 +1,6 @@
 package com.yaroslavsdev.nutriscan.data.remote.dto
 
+import com.google.gson.annotations.SerializedName
 import com.yaroslavsdev.nutriscan.domain.model.Product
 
 data class ProductDto(
@@ -11,7 +12,9 @@ data class ProductDto(
     val calories: Float,
     val proteins: Float,
     val fats: Float,
-    val carbs: Float
+    val carbs: Float,
+    @SerializedName("matched_allergens")
+    val matchedAllergens: List<String> = emptyList()
 )
 
 fun ProductDto.toDomain(): Product {
@@ -23,7 +26,8 @@ fun ProductDto.toDomain(): Product {
         calories = calories,
         proteins = proteins,
         fats = fats,
-        carbs = carbs
+        carbs = carbs,
+        matchedAllergens = matchedAllergens
     )
 }
 

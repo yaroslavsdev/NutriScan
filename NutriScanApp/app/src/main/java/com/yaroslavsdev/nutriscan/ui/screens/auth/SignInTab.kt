@@ -22,10 +22,10 @@ fun SignInTab(navController: NavController, viewModel: AuthViewModel) {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
-        Icon(Icons.Default.Person, null, Modifier.size(46.dp), MaterialTheme.colorScheme.primary)
-        Text("NutriScan", style = MaterialTheme.typography.headlineLarge)
+        Spacer(Modifier.height(14.dp))
+        Text("Войти", style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(14.dp))
 
         OutlinedTextField(
