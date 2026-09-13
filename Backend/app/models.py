@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func, ARRAY, Index
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func, Index
+
 from app.database import Base
 
 
@@ -75,4 +76,29 @@ class UserAllergen(Base):
 
     __table_args__ = (
         Index("index_user_allergens_user", "user_id"),
+    )
+
+
+# Таблица записей в дневнике питания
+class FoodDiaryEntry(Base):
+    __tablename__ = "food_diary_entries"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.id", nullable=True))
+
+    meal_type = Column(String, nullable=False)
+    weight_grams = Column(Float, nullable=False)
+
+    calories = Column(Float, nullable=False)
+    proteins = Column(Float, nullable=False)
+    fats = Column(Float, nullable=False)
+    carbs = Column(Float, nullable=False)
+
+    product_name = Column(String, nullable=False)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    __table_args__ = (
+        Index("index_food_diary_user_time", "user_id", "created_at"),
     )
