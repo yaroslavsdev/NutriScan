@@ -60,7 +60,6 @@ fun ProfileScreen(
                 padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
-
     ) {
         Text("Мой Профиль", style = MaterialTheme.typography.headlineMedium, fontSize = 24.sp)
 
@@ -74,6 +73,25 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        Button(
+            onClick = {  },
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large
+        ) {
+            Text("Изменить имя")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = {  },
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large
+        ) {
+            Text("Сменить пароль")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         Button(
             onClick = {
@@ -88,7 +106,7 @@ fun ProfileScreen(
             Text("Настроить аллергены")
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Button(
             onClick = {
@@ -103,7 +121,7 @@ fun ProfileScreen(
             Text("Параметры питания")
         }
 
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
         OutlinedButton(
             onClick = {
