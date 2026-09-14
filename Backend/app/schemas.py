@@ -70,6 +70,7 @@ class DiaryEntryCreate(BaseModel):
     barcode: str
     meal_type: str
     weight_grams: float = Field(gt = 0, le = 5000)
+    entry_date: date_type
 
 class DiaryEntryItem(BaseModel):
     id: int

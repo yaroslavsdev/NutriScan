@@ -35,7 +35,8 @@ def add_diary_entry(
         proteins=product.proteins * factor,
         fats=product.fats * factor,
         carbs=product.carbs * factor,
-        product_name=product.name
+        product_name=product.name,
+        entry_date=data.entry_date
     )
 
     db.add(entry)
@@ -50,19 +51,15 @@ def add_diary_entry(
 def get_diary_day(
         date: date_type,
         db: Session = Depends(get_db),
-        current_user: models.User = Depends(dependencies.get_current_user)
+        current_user: models.User = Depends(dependencies.get_current_user),
 ):
-    day_start = datetime.combine(date, datetime.min.time())
-    day_end = datetime.combine(date, datetime.max.time())
-
     entries = (
         db.query(models.FoodDiaryEntry)
         .filter(
             models.FoodDiaryEntry.user_id == current_user.id,
-            models.FoodDiaryEntry.created_at >= day_start,
-            models.FoodDiaryEntry.created_at <= day_end
+            models.FoodDiaryEntry.entry_date == date,
         )
-        .order_by(models.FoodDiaryEntry.created_at)
+        .order_by(models.FoodDiaryEntry.id)
         .all()
     )
 

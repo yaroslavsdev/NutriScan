@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func, Index
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func, Index, Date
 
 from app.database import Base
 
@@ -85,7 +85,7 @@ class FoodDiaryEntry(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    product_id = Column(Integer, ForeignKey("products.id", nullable=True))
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=True)
 
     meal_type = Column(String, nullable=False)
     weight_grams = Column(Float, nullable=False)
@@ -97,6 +97,7 @@ class FoodDiaryEntry(Base):
 
     product_name = Column(String, nullable=False)
 
+    entry_date = Column(Date, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     __table_args__ = (
