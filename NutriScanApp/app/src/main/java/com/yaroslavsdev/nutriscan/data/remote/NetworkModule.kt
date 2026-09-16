@@ -7,6 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.Instant
+import java.time.LocalDate
 
 object NetworkModule {
     private const val BASE_URL = "http://155.212.167.27:8000/"
@@ -31,6 +32,7 @@ object NetworkModule {
 
         val gson = GsonBuilder()
             .registerTypeAdapter(Instant::class.java, InstantAdapter())
+            .registerTypeAdapter(LocalDate::class.java, LocalDateAdapter())
             .create()
 
         return Retrofit.Builder()

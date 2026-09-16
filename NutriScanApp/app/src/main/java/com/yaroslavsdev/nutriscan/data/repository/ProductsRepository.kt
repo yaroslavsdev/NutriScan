@@ -12,7 +12,6 @@ import java.time.ZoneId
 
 class ProductsRepository(
     private val api: ProductsApi,
-    private val tokenManager: TokenManager
 ) {
     suspend fun getProduct(barcode: String): Result<Product> {
         return try {

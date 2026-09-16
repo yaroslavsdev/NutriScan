@@ -2,41 +2,43 @@ package com.yaroslavsdev.nutriscan.ui.screens.diary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yaroslavsdev.nutriscan.data.repository.FoodDiaryRepository
-import com.yaroslavsdev.nutriscan.ui.model.FoodDiaryDayUi
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.yaroslavsdev.nutriscan.data.repository.DiaryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.stateIn
 
-class FoodDiaryViewModel : ViewModel() {
+class FoodDiaryViewModel(
+    private val repository: DiaryRepository
+) : ViewModel() {
 
-    private val selectedDate = MutableStateFlow<LocalDate>(LocalDate.now())
+    private val _uiState = MutableStateFlow(FoodDiaryUiState())
+    val uiState = _uiState.asStateFlow()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val uiState: StateFlow<FoodDiaryDayUi> =
-        selectedDate
-            .flatMapLatest { date ->
-                FoodDiaryRepository.getDay(date)
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = FoodDiaryDayUi(
-                    date = LocalDate.now(),
-                    items = emptyList(),
-                    totalCalories = 0f
-                )
-            )
+    private val _isError = MutableStateFlow(false)
+    val isError = _isError.asStateFlow()
+
+    init {
+        loadDay(LocalDate.now())
+    }
+
+    fun loadDay(date: LocalDate) {
+        viewModelScope.launch {
+            repository.getDay(date)
+                .onSuccess { _uiState.value = it }
+                .onFailure { _isError.value = true }
+        }
+    }
 
     fun previousDay() {
-        selectedDate.value = selectedDate.value.minusDays(1);
+        loadDay(_uiState.value.date.minusDays(1))
     }
 
     fun nextDay() {
-        selectedDate.value = selectedDate.value.plusDays(1);
+        loadDay(_uiState.value.date.plusDays(1))
+    }
+
+    fun consumeError() {
+        _isError.value = false
     }
 }

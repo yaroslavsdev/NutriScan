@@ -29,7 +29,9 @@ class AllergensViewModel(private val repository: AuthRepository) : ViewModel() {
     ))
     val allergens = _allergens.asStateFlow()
 
-    init { loadData() }
+    init {
+        loadData()
+    }
 
     fun loadData() {
         viewModelScope.launch {
