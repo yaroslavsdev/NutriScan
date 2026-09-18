@@ -3,7 +3,11 @@ package com.yaroslavsdev.nutriscan.data.remote.api
 import com.yaroslavsdev.nutriscan.data.remote.dto.ProductCreateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.ProductDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.ScanHistoryDto
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ProductsApi {
     @GET("products/{barcode}")

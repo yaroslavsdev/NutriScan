@@ -1,6 +1,5 @@
 package com.yaroslavsdev.nutriscan.data.repository
 
-import com.yaroslavsdev.nutriscan.data.local.TokenManager
 import com.yaroslavsdev.nutriscan.data.remote.api.ProductsApi
 import com.yaroslavsdev.nutriscan.data.remote.dto.ProductCreateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.toDomain

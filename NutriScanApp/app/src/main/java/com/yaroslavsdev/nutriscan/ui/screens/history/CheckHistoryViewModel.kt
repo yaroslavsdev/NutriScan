@@ -3,7 +3,8 @@ package com.yaroslavsdev.nutriscan.ui.screens.history
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yaroslavsdev.nutriscan.data.repository.ProductsRepository
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class CheckHistoryViewModel(
