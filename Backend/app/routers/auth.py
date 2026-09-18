@@ -37,6 +37,35 @@ def login(user: schemas.UserLogin, db: Session = Depends(database.get_db)):
     return {"access_token": token, "token_type": "bearer"}
 
 
+# Изменить имя пользователя
+@router.post("/username")
+def update_username(
+    data: schemas.UsernameUpdate,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(dependencies.get_current_user)
+):
+    current_user.username = data.username
+    db.commit()
+
+    return {"status": "success", "username": current_user.username}
+
+
+# Сменить пароль
+@router.post("/password")
+def update_password(
+    data: schemas.PasswordUpdate,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(dependencies.get_current_user)
+):
+    if not auth_utils.verify_password(data.current_password, current_user.password_hash):
+        raise HTTPException(status_code=400, detail="Неверный текущий пароль")
+
+    current_user.password_hash = auth_utils.hash_password(data.new_password)
+    db.commit()
+
+    return {"status": "success"}
+
+
 # Получение аллергенов пользователя
 def get_user_allergen_names(db: Session, user_id: int) -> list[str]:
     rows = (

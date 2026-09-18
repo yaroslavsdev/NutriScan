@@ -47,6 +47,7 @@ class ScanHistoryItem(BaseModel):
     class Config:
         from_attributes = True
 
+# Профиль
 class UserCreate(BaseModel):
     username: str
     email: str
@@ -59,6 +60,13 @@ class UserLogin(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class UsernameUpdate(BaseModel):
+    username: str = Field(min_length=1, max_length=50)
+
+class PasswordUpdate(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=6, max_length=100)
 
 class AllergensUpdate(BaseModel):
     allergens: list[str]
