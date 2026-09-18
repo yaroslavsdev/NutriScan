@@ -23,7 +23,7 @@ fun HomeScreen(navController: NavHostController) {
             .padding(horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.padding(vertical =16.dp))
+        Spacer(Modifier.padding(vertical = 16.dp))
 
         Text("Проверьте продукт, нажав кнопку")
 

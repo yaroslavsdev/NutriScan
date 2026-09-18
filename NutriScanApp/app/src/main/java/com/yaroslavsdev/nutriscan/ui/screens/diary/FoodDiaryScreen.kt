@@ -36,8 +36,8 @@ fun FoodDiaryScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 12.dp)
+            .statusBarsPadding()
+            .padding(horizontal = 8.dp, vertical = 10.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,

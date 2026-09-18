@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -88,7 +90,13 @@ fun AllergensContent(
     onAllergenClick: (String) -> Unit,
     onDoneClick: () -> Unit
 ) {
-    Column(Modifier.fillMaxSize().padding(16.dp, 30.dp, 16.dp, 18.dp)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .padding(horizontal = 8.dp, vertical = 10.dp)
+    ) {
         Text("Выберите ваши аллергены", style = MaterialTheme.typography.headlineSmall)
         Text("Это поможет предупреждать об опасности", color = Color.Gray)
 

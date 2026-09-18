@@ -2,24 +2,23 @@ package com.yaroslavsdev.nutriscan.ui.screens.product
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,7 +32,6 @@ import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import com.yaroslavsdev.nutriscan.ui.state.ProductState
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductScreen(
     barcode: String,
@@ -47,24 +45,25 @@ fun ProductScreen(
         viewModel.loadProduct(barcode)
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Товар") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
-                    }
-                }
-            )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+    ) {
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+            }
+            Text("Товар", style = MaterialTheme.typography.titleLarge)
         }
-    ) { padding ->
 
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .verticalScroll(rememberScrollState()),
+                .statusBarsPadding()
+                .padding(horizontal = 8.dp, vertical = 10.dp),
             contentAlignment = Alignment.TopCenter
         ) {
 
@@ -79,28 +78,40 @@ fun ProductScreen(
                 is ProductState.Success -> {
                     val product = (state as ProductState.Success).product
 
-                    ProductInfoCard(
-                        name = product.name,
-                        brand = product.brand,
-                        ingredients = product.ingredients,
-                        calories = product.calories,
-                        proteins = product.proteins,
-                        fats = product.fats,
-                        carbs = product.carbs,
-                        matchedAllergens = product.matchedAllergens,
-                        modifier = Modifier.padding(12.dp)
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        ProductInfoCard(
+                            name = product.name,
+                            brand = product.brand,
+                            ingredients = product.ingredients,
+                            calories = product.calories,
+                            proteins = product.proteins,
+                            fats = product.fats,
+                            carbs = product.carbs,
+                            matchedAllergens = product.matchedAllergens,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
 
                 ProductState.NotFound -> {
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(horizontal = 12.dp)
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("Продукт не найден в базе, но вы можете самостоятельно добавить информацию о нём")
+                        Text("Продукт не найден в базе, но вы можете добавить информацию о нём")
+
                         Spacer(Modifier.height(12.dp))
+
                         Button(
-                            onClick = { navController.navigate(Screen.AddProductScreen.createRoute(barcode)) },
+                            onClick = {
+                                navController.navigate(
+                                    Screen.AddProductScreen.createRoute(barcode)
+                                )
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             shape = MaterialTheme.shapes.large
                         ) {

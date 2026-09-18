@@ -46,12 +46,14 @@ fun ScannerScreen(
 
         else -> {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .padding(horizontal = 8.dp, vertical = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = "Сканирование штрих-кода",
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(top = 30.dp, end = 22.dp)
                 )
 
                 Box(

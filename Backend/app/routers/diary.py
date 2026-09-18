@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from datetime import date as date_type, datetime
+from datetime import date as date_type
 
 from app import schemas, models, dependencies
 from app.database import get_db

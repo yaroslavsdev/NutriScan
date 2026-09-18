@@ -1,46 +1,16 @@
 package com.yaroslavsdev.nutriscan.ui
 
-import android.annotation.SuppressLint
-import com.yaroslavsdev.nutriscan.ui.navigation.AppNavigation
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.yaroslavsdev.nutriscan.ui.navigation.BottomNavItem
-import com.yaroslavsdev.nutriscan.ui.components.BottomBar
-import kotlin.collections.contains
+import com.yaroslavsdev.nutriscan.ui.navigation.AppNavigation
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NutriScanApp() {
     val navController = rememberNavController()
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
-    val routesWithBottomBar = listOf(
-        BottomNavItem.Home.route,
-        BottomNavItem.Diary.route,
-        BottomNavItem.History.route,
-        BottomNavItem.Profile.route
+    AppNavigation(
+        navController = navController,
+        modifier = Modifier
     )
-
-    val showBottomBar = currentRoute in routesWithBottomBar
-
-    Scaffold(
-        bottomBar = {
-            if (showBottomBar) {
-                BottomBar(navController)
-            }
-        }
-    ) { innerPadding ->
-        AppNavigation(
-            navController = navController,
-            modifier = Modifier.padding(0.dp)
-        )
-    }
 }

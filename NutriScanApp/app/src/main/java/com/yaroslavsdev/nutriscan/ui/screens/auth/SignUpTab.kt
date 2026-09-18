@@ -1,6 +1,7 @@
 package com.yaroslavsdev.nutriscan.ui.screens.auth
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -18,7 +19,7 @@ import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 @Composable
 fun SignUpTab(navController: NavController, viewModel: AuthViewModel) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxSize().padding(10.dp).verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
