@@ -9,6 +9,8 @@ class Nutrition(BaseModel):
     fats: float
     carbs: float
 
+
+# Продукты
 class ProductCreate(BaseModel):
     barcode: str
     name: str
@@ -31,6 +33,8 @@ class ProductResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+# История сканирований
 class ScanHistoryItem(BaseModel):
     id: int
     status: str
@@ -46,6 +50,7 @@ class ScanHistoryItem(BaseModel):
 
     class Config:
         from_attributes = True
+
 
 # Профиль
 class UserCreate(BaseModel):
@@ -74,6 +79,8 @@ class AllergensUpdate(BaseModel):
 class NutritionUpdate(BaseModel):
     daily_calorie_goal: int = Field(ge=500, le=10000)
 
+
+# Дневник питания
 class DiaryEntryCreate(BaseModel):
     barcode: str
     meal_type: str

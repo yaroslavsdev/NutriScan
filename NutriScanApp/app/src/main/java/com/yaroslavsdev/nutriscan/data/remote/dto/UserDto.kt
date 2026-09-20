@@ -1,5 +1,7 @@
 package com.yaroslavsdev.nutriscan.data.remote.dto
 
+import com.google.gson.annotations.SerializedName
+
 data class UserProfileDto(
     val username: String,
     val email: String,
@@ -12,5 +14,6 @@ data class AllergensUpdateDto(
 )
 
 data class CaloriesUpdateDto(
-    val daily_calorie_goal: Int
+    @SerializedName("daily_calorie_goal")
+    val dailyCalorieGoal: Int
 )

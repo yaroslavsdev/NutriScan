@@ -52,7 +52,7 @@ class ProductsRepository(
                     name = dto.name,
                     ingredients = dto.ingredients,
                     calories = dto.calories,
-                    scannedAt = dto.scan_time.atZone(ZoneId.systemDefault()).toLocalDateTime()
+                    scannedAt = dto.scanTime.atZone(ZoneId.systemDefault()).toLocalDateTime()
                 )
             }
             Result.success(items)

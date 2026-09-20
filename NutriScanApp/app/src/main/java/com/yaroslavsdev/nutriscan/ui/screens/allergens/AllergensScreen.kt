@@ -87,7 +87,6 @@ fun AllergensContent(
     Column(
         Modifier
             .fillMaxSize()
-            .statusBarsPadding()
             .navigationBarsPadding()
             .padding(horizontal = 8.dp, vertical = 10.dp)
     ) {
@@ -143,25 +142,5 @@ fun AllergenCard(allergen: Allergen, onClick: () -> Unit) {
 
             Text(allergen.name, fontWeight = FontWeight.Medium)
         }
-    }
-}
-
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun AllergensPreview() {
-    val fakeAllergens = listOf(
-        Allergen("1", "Лактоза", R.drawable.ic_launcher_background, isSelected = true),
-        Allergen("2", "Арахис", R.drawable.ic_launcher_background, isSelected = false),
-        Allergen("3", "Глютен", R.drawable.ic_launcher_background, isSelected = false),
-        Allergen("4", "Морепродукты", R.drawable.ic_launcher_background, isSelected = true)
-    )
-
-    MaterialTheme {
-        AllergensContent(
-            allergens = fakeAllergens,
-            onAllergenClick = {},
-            onDoneClick = {}
-        )
     }
 }

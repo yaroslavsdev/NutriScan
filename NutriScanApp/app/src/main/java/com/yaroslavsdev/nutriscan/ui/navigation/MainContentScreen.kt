@@ -2,6 +2,7 @@ package com.yaroslavsdev.nutriscan.ui.navigation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -20,7 +21,9 @@ import com.yaroslavsdev.nutriscan.ui.screens.profile.ProfileScreen
 import com.yaroslavsdev.nutriscan.ui.screens.scan.ScannerScreen
 
 @Composable
-fun MainContentScreen(rootNavController: NavHostController) {
+fun MainContentScreen(
+    rootNavController: NavHostController
+) {
     val bottomNavController = rememberNavController()
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -31,6 +34,7 @@ fun MainContentScreen(rootNavController: NavHostController) {
             modifier = Modifier
                 .weight(1f)
                 .fillMaxSize()
+                .statusBarsPadding()
         ) {
             composable(BottomNavItem.Home.route) { HomeScreen(bottomNavController) }
             composable(BottomNavItem.Diary.route) { FoodDiaryScreen(bottomNavController) }
@@ -41,7 +45,10 @@ fun MainContentScreen(rootNavController: NavHostController) {
             }
 
             composable(Screen.ScannerScreen.route) {
-                ScannerScreen(bottomNavController)
+                ScannerScreen(
+                    navController = bottomNavController,
+                    onBack = { bottomNavController.popBackStack() }
+                )
             }
 
             composable(

@@ -11,7 +11,9 @@ import com.yaroslavsdev.nutriscan.data.repository.ProductsRepository
 import com.yaroslavsdev.nutriscan.ui.screens.addProduct.AddProductViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.allergens.AllergensViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.auth.AuthViewModel
+import com.yaroslavsdev.nutriscan.ui.screens.changePassword.ChangePasswordViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.diary.FoodDiaryViewModel
+import com.yaroslavsdev.nutriscan.ui.screens.editName.EditNameViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.history.CheckHistoryViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.nutrition.NutritionViewModel
 import com.yaroslavsdev.nutriscan.ui.screens.product.ProductViewModel
@@ -41,4 +43,6 @@ val appModule = module {
     viewModelOf(::CheckHistoryViewModel)
     viewModelOf(::AddProductViewModel)
     viewModelOf(::FoodDiaryViewModel)
+    viewModelOf(::EditNameViewModel)
+    viewModelOf(::ChangePasswordViewModel)
 }

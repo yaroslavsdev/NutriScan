@@ -41,7 +41,6 @@ fun CheckHistoryScreen(
 
     Column(
         modifier = Modifier
-            .statusBarsPadding()
             .padding(horizontal = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

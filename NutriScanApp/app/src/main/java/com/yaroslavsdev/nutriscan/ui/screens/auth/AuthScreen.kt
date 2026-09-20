@@ -28,7 +28,6 @@ fun AuthScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
             .navigationBarsPadding()
             .padding(vertical = 10.dp)
     ) {

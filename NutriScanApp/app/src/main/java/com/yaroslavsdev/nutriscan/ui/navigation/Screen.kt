@@ -7,6 +7,8 @@ sealed class Screen(
     object Main : Screen("main_root")
     object NutritionScreen : Screen("nutrition_screen")
     object ScannerScreen : Screen("scanner_screen")
+    object EditNameScreen : Screen("edit_name_screen")
+    object ChangePasswordScreen : Screen("change_password_screen")
 
     object AllergensScreen : Screen("allergens_screen/{fromRegistration}") {
         fun createRoute(fromRegistration: Boolean): String {

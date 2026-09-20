@@ -1,4 +1,8 @@
 package com.yaroslavsdev.nutriscan.ui.navigation
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -10,6 +14,8 @@ import androidx.navigation.navArgument
 import com.yaroslavsdev.nutriscan.data.local.TokenManager
 import com.yaroslavsdev.nutriscan.ui.screens.allergens.AllergensScreen
 import com.yaroslavsdev.nutriscan.ui.screens.auth.AuthScreen
+import com.yaroslavsdev.nutriscan.ui.screens.changePassword.ChangePasswordScreen
+import com.yaroslavsdev.nutriscan.ui.screens.editName.EditNameScreen
 import com.yaroslavsdev.nutriscan.ui.screens.nutrition.NutritionScreen
 import org.koin.compose.koinInject
 
@@ -32,9 +38,19 @@ fun AppNavigation(
         navController = navController,
         startDestination = startRoute,
         modifier = modifier
+            .fillMaxSize()
+            .statusBarsPadding()
     ) {
         composable(Screen.Auth.route) {
             AuthScreen(navController)
+        }
+
+        composable(Screen.EditNameScreen.route) {
+            EditNameScreen(navController)
+        }
+
+        composable(Screen.ChangePasswordScreen.route) {
+            ChangePasswordScreen(navController)
         }
 
         composable(

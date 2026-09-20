@@ -49,7 +49,6 @@ fun FoodDiaryScreen(
 
     Column(
         modifier = Modifier
-            .statusBarsPadding()
             .padding(horizontal = 8.dp, vertical = 10.dp)
     ) {
         Row(

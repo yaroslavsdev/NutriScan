@@ -5,9 +5,15 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +29,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ScannerScreen(
     navController: NavController,
+    onBack: () -> Unit,
     viewModel: ScanViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -54,20 +61,22 @@ fun ScannerScreen(
         else -> {
             Column(
                 modifier = Modifier
-                    .statusBarsPadding()
-                    .padding(horizontal = 8.dp, vertical = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize(),
             ) {
-                Text(
-                    text = "Сканирование штрих-кода",
-                    modifier = Modifier.padding(top = 30.dp, end = 22.dp)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                    }
+                    Text("Сканирование штрих-кода", style = MaterialTheme.typography.titleLarge)
+                }
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding(horizontal = 16.dp, vertical = 24.dp)
+                        .padding(horizontal = 16.dp, vertical = 16.dp)
                 ) {
                     CameraPreview(viewModel)
                 }

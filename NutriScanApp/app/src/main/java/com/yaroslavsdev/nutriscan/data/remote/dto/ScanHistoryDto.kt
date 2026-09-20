@@ -1,5 +1,6 @@
 package com.yaroslavsdev.nutriscan.data.remote.dto
 
+import com.google.gson.annotations.SerializedName
 import java.time.Instant
 
 data class ScanHistoryDto(
@@ -13,5 +14,6 @@ data class ScanHistoryDto(
     val proteins: Float?,
     val fats: Float?,
     val carbs: Float?,
-    val scan_time: Instant
+    @SerializedName("scan_time")
+    val scanTime: Instant
 )

@@ -68,7 +68,6 @@ fun NutritionContent(
 ) {
     Column(
         Modifier
-            .statusBarsPadding()
             .navigationBarsPadding()
             .padding(horizontal = 8.dp, vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally

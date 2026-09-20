@@ -23,6 +23,8 @@ fun HomeScreen(navController: NavHostController) {
             .padding(horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        var onButtonClicked = false
+
         Spacer(Modifier.padding(vertical = 16.dp))
 
         Text("Проверьте продукт, нажав кнопку")
@@ -30,7 +32,11 @@ fun HomeScreen(navController: NavHostController) {
         Spacer(Modifier.padding(vertical = 16.dp))
 
         Button(
-            onClick = { navController.navigate(Screen.ScannerScreen.route) },
+            onClick = {
+                if (!onButtonClicked) {
+                    onButtonClicked = true
+                    navController.navigate(Screen.ScannerScreen.route)
+                } },
             shape = MaterialTheme.shapes.large
         ) {
             Text("Сканировать товар")

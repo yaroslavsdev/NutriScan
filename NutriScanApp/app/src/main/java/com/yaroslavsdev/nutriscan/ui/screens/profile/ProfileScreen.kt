@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -54,9 +56,10 @@ fun ProfileScreen(
 
     Column(
         modifier = Modifier
-            .statusBarsPadding()
-            .padding(horizontal = 8.dp, vertical = 10.dp),
+            .padding(horizontal = 8.dp, vertical = 10.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
+
     ) {
         Text("Мой Профиль", style = MaterialTheme.typography.headlineMedium, fontSize = 24.sp)
 
@@ -71,7 +74,12 @@ fun ProfileScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
-            onClick = {  },
+            onClick = {
+                if (!isNavigating) {
+                    isNavigating = true
+                    navController.navigate(Screen.EditNameScreen.route)
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.large
         ) {
@@ -81,7 +89,12 @@ fun ProfileScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = {  },
+            onClick = {
+                if (!isNavigating) {
+                    isNavigating = true
+                    navController.navigate(Screen.ChangePasswordScreen.route)
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.large
         ) {
