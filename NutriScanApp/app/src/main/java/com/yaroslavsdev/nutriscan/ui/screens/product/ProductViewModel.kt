@@ -15,6 +15,11 @@ class ProductViewModel(
     val state: StateFlow<ProductState> = _state
 
     fun loadProduct(barcode: String) {
+        val currentState = _state.value
+        if (currentState is ProductState.Success && currentState.product.barcode == barcode) {
+            return
+        }
+
         viewModelScope.launch {
             _state.value = ProductState.Loading
 
