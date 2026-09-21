@@ -1,0 +1,4 @@
+.idea/
+.kotlin/
+__pycache__/
+Backend/.env
