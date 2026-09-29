@@ -8,7 +8,7 @@ from app.database import get_db
 router = APIRouter(prefix="/diary", tags=["Diary"])
 
 # Добавление записи
-@router.post("", response_model=schemas.DiaryEntryCreate)
+@router.post("", response_model=schemas.DiaryEntryItem)
 def add_diary_entry(
         data: schemas.DiaryEntryCreate,
         db: Session = Depends(get_db),
