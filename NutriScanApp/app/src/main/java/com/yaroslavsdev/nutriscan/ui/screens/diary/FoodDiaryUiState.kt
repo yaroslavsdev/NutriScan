@@ -17,6 +17,9 @@ data class DiaryItemUi(
 data class FoodDiaryUiState(
     val date: LocalDate = LocalDate.now(),
     val totalCalories: Float = 0f,
+    val totalProteins: Float = 0f,
+    val totalFats: Float = 0f,
+    val totalCarbs: Float = 0f,
     val breakfast: List<DiaryItemUi> = emptyList(),
     val lunch: List<DiaryItemUi> = emptyList(),
     val dinner: List<DiaryItemUi> = emptyList(),

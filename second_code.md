@@ -1,0 +1,1 @@
+Ссылка на видео с показом кода: https://disk.yandex.com/i/avPHkmqzHljr8A

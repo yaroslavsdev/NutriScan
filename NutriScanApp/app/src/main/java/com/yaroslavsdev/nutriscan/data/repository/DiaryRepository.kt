@@ -60,6 +60,9 @@ class DiaryRepository(
                 FoodDiaryUiState(
                     date = dto.date,
                     totalCalories = dto.totalCalories,
+                    totalProteins = dto.totalProteins,
+                    totalFats = dto.totalFats,
+                    totalCarbs = dto.totalCarbs,
                     breakfast = dto.breakfast.toUi(),
                     lunch = dto.lunch.toUi(),
                     dinner = dto.dinner.toUi(),

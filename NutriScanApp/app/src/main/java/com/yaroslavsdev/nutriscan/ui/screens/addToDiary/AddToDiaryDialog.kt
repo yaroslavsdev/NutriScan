@@ -67,13 +67,14 @@ fun AddToDiaryDialog(
                 Text("Приём пищи")
                 Spacer(Modifier.height(8.dp))
 
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     MealTypeLabels.all.take(2).forEach { (key, label) ->
                         FilterChip(
                             selected = selectedMealType == key,
                             onClick = { selectedMealType = key },
                             label = { Text(label) }
                         )
+                        Spacer(Modifier.height(4.dp))
                     }
                 }
 
@@ -98,7 +99,8 @@ fun AddToDiaryDialog(
                             weightText = newText
                         }
                     },
-                    label = { Text("Вес порции, г") },
+                    label = { Text("Вес порции") },
+                    suffix = { Text("грамм") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
