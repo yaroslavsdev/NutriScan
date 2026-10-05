@@ -10,6 +10,12 @@ sealed class Screen(
     object EditNameScreen : Screen("edit_name_screen")
     object ChangePasswordScreen : Screen("change_password_screen")
 
+    object NutritionStatsScreen : Screen("nutrition_stats_screen/{proteins}/{fats}/{carbs}/{totalWeight}") {
+        fun createRoute(proteins: Float, fats: Float, carbs: Float, totalWeight: Float): String {
+            return "nutrition_stats_screen/$proteins/$fats/$carbs/$totalWeight"
+        }
+    }
+
     object AllergensScreen : Screen("allergens_screen/{fromRegistration}") {
         fun createRoute(fromRegistration: Boolean): String {
             return "allergens_screen/$fromRegistration"

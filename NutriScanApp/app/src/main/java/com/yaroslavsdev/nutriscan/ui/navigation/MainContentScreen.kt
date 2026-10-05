@@ -15,6 +15,7 @@ import com.yaroslavsdev.nutriscan.ui.components.BottomBar
 import com.yaroslavsdev.nutriscan.ui.screens.HomeScreen
 import com.yaroslavsdev.nutriscan.ui.screens.addProduct.AddProductScreen
 import com.yaroslavsdev.nutriscan.ui.screens.diary.FoodDiaryScreen
+import com.yaroslavsdev.nutriscan.ui.screens.diary.NutritionStatsScreen
 import com.yaroslavsdev.nutriscan.ui.screens.history.CheckHistoryScreen
 import com.yaroslavsdev.nutriscan.ui.screens.product.ProductScreen
 import com.yaroslavsdev.nutriscan.ui.screens.profile.ProfileScreen
@@ -27,7 +28,6 @@ fun MainContentScreen(
     val bottomNavController = rememberNavController()
 
     Column(modifier = Modifier.fillMaxSize()) {
-
         NavHost(
             navController = bottomNavController,
             startDestination = BottomNavItem.Home.route,
@@ -47,6 +47,29 @@ fun MainContentScreen(
             composable(Screen.ScannerScreen.route) {
                 ScannerScreen(
                     navController = bottomNavController,
+                    onBack = { bottomNavController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = Screen.NutritionStatsScreen.route,
+                arguments = listOf(
+                    navArgument("proteins") { type = NavType.FloatType },
+                    navArgument("fats") { type = NavType.FloatType },
+                    navArgument("carbs") { type = NavType.FloatType },
+                    navArgument("totalWeight") { type = NavType.FloatType }
+                )
+            ) { backStackEntry ->
+                val proteins = backStackEntry.arguments?.getFloat("proteins") ?: 0f
+                val fats = backStackEntry.arguments?.getFloat("fats") ?: 0f
+                val carbs = backStackEntry.arguments?.getFloat("carbs") ?: 0f
+                val totalWeight = backStackEntry.arguments?.getFloat("totalWeight") ?: 0f
+
+                NutritionStatsScreen(
+                    proteins = proteins,
+                    fats = fats,
+                    carbs = carbs,
+                    totalWeight = totalWeight,
                     onBack = { bottomNavController.popBackStack() }
                 )
             }

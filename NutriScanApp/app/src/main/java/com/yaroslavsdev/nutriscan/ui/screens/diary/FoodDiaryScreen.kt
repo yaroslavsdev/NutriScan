@@ -12,6 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -20,13 +24,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.format.DateTimeFormatter
+import kotlin.math.min
 
 @Composable
 fun FoodDiaryScreen(
@@ -53,7 +60,7 @@ fun FoodDiaryScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             TextButton(onClick = viewModel::previousDay) {
-                Text("←")
+                Text("<--")
             }
 
             Text(
@@ -63,18 +70,48 @@ fun FoodDiaryScreen(
             )
 
             TextButton(onClick = viewModel::nextDay) {
-                Text("→")
+                Text("-->")
             }
         }
 
         Spacer(Modifier.height(8.dp))
 
+        val progress = if (state.dailyCalorieGoal == 0) {
+            0f
+        } else {
+            min(1f * state.totalCalories / state.dailyCalorieGoal, 1f)
+        }
+
+        Spacer(Modifier.height(8.dp))
+
         Text(
-            text = "Всего: ${state.totalCalories.toInt()} ккал",
+            text = "${state.totalCalories.toInt()} / ${state.dailyCalorieGoal} ккал",
             fontSize = 16.sp
         )
 
-        Spacer(Modifier.height(16.dp))
+        LinearProgressIndicator(
+            progress = { progress },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(12.dp)
+        )
+
+        Spacer(Modifier.height(12.dp))
+
+        OutlinedButton (
+            onClick = { navController.navigate(Screen.NutritionStatsScreen.createRoute(
+                proteins = state.totalProteins,
+                fats = state.totalFats,
+                carbs = state.totalCarbs,
+                totalWeight = state.totalWeight
+            )) },
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large
+        ) {
+            Text("Статистика БЖУ")
+        }
+
+        Spacer(Modifier.height(8.dp))
 
         if (state.items.isEmpty()) {
             Box(

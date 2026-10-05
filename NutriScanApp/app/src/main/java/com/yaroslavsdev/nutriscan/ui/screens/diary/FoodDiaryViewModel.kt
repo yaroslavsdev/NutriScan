@@ -2,6 +2,7 @@ package com.yaroslavsdev.nutriscan.ui.screens.diary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yaroslavsdev.nutriscan.data.repository.AuthRepository
 import com.yaroslavsdev.nutriscan.data.repository.DiaryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -9,7 +10,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class FoodDiaryViewModel(
-    private val repository: DiaryRepository
+    private val diaryRepository: DiaryRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FoodDiaryUiState())
@@ -22,11 +24,23 @@ class FoodDiaryViewModel(
         loadDay(LocalDate.now())
     }
 
+    private fun loadGoal() {
+        viewModelScope.launch {
+            authRepository.getMe().onSuccess { profile ->
+                _uiState.value = _uiState.value.copy(dailyCalorieGoal = profile.dailyCalorieGoal)
+            }
+        }
+    }
+
     fun loadDay(date: LocalDate) {
         viewModelScope.launch {
-            repository.getDay(date)
-                .onSuccess { _uiState.value = it }
-                .onFailure { _isError.value = true }
+            diaryRepository.getDay(date)
+                .onSuccess {
+                    _uiState.value = it.copy(dailyCalorieGoal = _uiState.value.dailyCalorieGoal)
+                }
+                .onFailure {
+                    _isError.value = true
+                }
         }
     }
 

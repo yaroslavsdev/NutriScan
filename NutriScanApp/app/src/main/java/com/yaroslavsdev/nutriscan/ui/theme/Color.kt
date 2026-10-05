@@ -15,3 +15,7 @@ val SafeGreenContainer = Color(0xFFD7F6DA)
 
 val UnsafeRed = Color(0xFFC62828)
 val UnsafeRedContainer = Color(0xFFFFDADA)
+
+val ProteinColor = Color(0xFF42A5F5)
+val FatColor = Color(0xFFFFA726)
+val CarbColor = Color(0xFF66BB6A)
