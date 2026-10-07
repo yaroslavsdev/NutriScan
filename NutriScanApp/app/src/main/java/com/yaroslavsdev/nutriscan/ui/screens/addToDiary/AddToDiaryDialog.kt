@@ -67,27 +67,27 @@ fun AddToDiaryDialog(
                 Text("Приём пищи")
                 Spacer(Modifier.height(8.dp))
 
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    MealTypeLabels.all.take(2).forEach { (key, label) ->
+                val showRow = @Composable { firstPair: Pair<String, String>, secondPair: Pair<String, String> ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         FilterChip(
-                            selected = selectedMealType == key,
-                            onClick = { selectedMealType = key },
-                            label = { Text(label) }
+                            selected = selectedMealType == firstPair.first,
+                            onClick = { selectedMealType = firstPair.first },
+                            label = { Text(firstPair.second) }
                         )
-                        Spacer(Modifier.height(4.dp))
+
+                        FilterChip(
+                            selected = selectedMealType == secondPair.first,
+                            onClick = { selectedMealType = secondPair.first },
+                            label = { Text(secondPair.second) }
+                        )
                     }
                 }
 
-                Spacer(Modifier.height(8.dp))
-
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    MealTypeLabels.all.drop(2).forEach { (key, label) ->
-                        FilterChip(
-                            selected = selectedMealType == key,
-                            onClick = { selectedMealType = key },
-                            label = { Text(label) }
-                        )
-                    }
+                for (i in 0..3 step 2) {
+                    MealTypeLabels.all[i]
+                    val firstPair = MealTypeLabels.all[i]
+                    val secondPair = MealTypeLabels.all[i + 1]
+                    showRow(firstPair, secondPair)
                 }
 
                 Spacer(Modifier.height(16.dp))
