@@ -4,7 +4,7 @@ from app.database import engine, SessionLocal
 from app import models
 from app.update_allergen_triggers import update_allergen_triggers
 
-models.Base.metadata.create_all(bind=engine)
+# models.Base.metadata.create_all(bind=engine)
 
 db = SessionLocal()
 try:
