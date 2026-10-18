@@ -10,7 +10,7 @@ import java.time.Instant
 import java.time.LocalDate
 
 object NetworkModule {
-    private const val BASE_URL = "http://155.212.167.27:8000/"
+    private const val BASE_URL = "https://yaroslav.safronov.09.fvds.ru/"
 
     private fun getRetrofit(tokenManager: TokenManager): Retrofit {
         val logging = HttpLoggingInterceptor().apply {

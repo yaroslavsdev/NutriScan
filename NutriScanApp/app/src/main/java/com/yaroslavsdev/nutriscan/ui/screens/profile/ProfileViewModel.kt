@@ -27,7 +27,7 @@ class ProfileViewModel(
     fun fetchProfile() {
         viewModelScope.launch {
             try {
-                val profile = authApi.getMe()
+                val profile = authApi.getUser()
                 _userProfile.value = profile
             } catch (e: Exception) {
                 _isError.value = true

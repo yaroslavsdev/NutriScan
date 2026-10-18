@@ -24,7 +24,7 @@ class NutritionViewModel(
     fun loadData() {
         viewModelScope.launch {
             _isError.value = false
-            repository.getMe()
+            repository.getUser()
                 .onSuccess { profile ->
                     _dailyCalorieGoal.value = profile.dailyCalorieGoal
                 }

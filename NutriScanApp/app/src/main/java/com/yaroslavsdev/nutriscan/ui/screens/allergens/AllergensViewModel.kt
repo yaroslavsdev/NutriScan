@@ -36,7 +36,7 @@ class AllergensViewModel(private val repository: AuthRepository) : ViewModel() {
     fun loadData() {
         viewModelScope.launch {
             _isError.value = false
-            repository.getMe()
+            repository.getUser()
                 .onSuccess { profile ->
                     _allergens.update { list ->
                         list.map { it.copy(isSelected = profile.allergens.contains(it.id)) }

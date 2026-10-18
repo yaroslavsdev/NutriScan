@@ -22,7 +22,7 @@ class EditNameViewModel(
 
     init {
         viewModelScope.launch {
-            repository.getMe().onSuccess { profile ->
+            repository.getUser().onSuccess { profile ->
                 _username.value = profile.username
             }
         }

@@ -21,7 +21,7 @@ interface AuthApi {
     suspend fun login(@Body request: AuthRequest): AuthResponse
 
     @GET("auth/me")
-    suspend fun getMe(): UserProfileDto
+    suspend fun getUser(): UserProfileDto
 
     @POST("auth/allergens")
     suspend fun saveAllergens(@Body request: AllergensUpdateDto)

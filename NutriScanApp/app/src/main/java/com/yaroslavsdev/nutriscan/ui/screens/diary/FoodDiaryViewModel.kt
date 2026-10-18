@@ -26,7 +26,7 @@ class FoodDiaryViewModel(
 
     private fun loadGoal() {
         viewModelScope.launch {
-            authRepository.getMe().onSuccess { profile ->
+            authRepository.getUser().onSuccess { profile ->
                 _uiState.value = _uiState.value.copy(dailyCalorieGoal = profile.dailyCalorieGoal)
             }
         }

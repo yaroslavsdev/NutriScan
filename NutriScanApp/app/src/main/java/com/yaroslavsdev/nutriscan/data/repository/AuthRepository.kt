@@ -41,9 +41,9 @@ class AuthRepository(
         }
     }
 
-    suspend fun getMe(): Result<UserProfileDto> {
+    suspend fun getUser(): Result<UserProfileDto> {
         return try {
-            Result.success(api.getMe())
+            Result.success(api.getUser())
         } catch (e: Exception) {
             Result.failure(e)
         }
