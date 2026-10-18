@@ -1,13 +1,11 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, func, Index, Date
-
 from app.database import Base
-
 
 # Таблица Пользователей
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     username = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=False)
@@ -18,7 +16,7 @@ class User(Base):
 class Product(Base):
     __tablename__ = "products"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     barcode = Column(String, unique=True, index=True, nullable=False)
     name = Column(String, nullable=False)
     brand = Column(String, nullable=True)
@@ -33,7 +31,7 @@ class Product(Base):
 class ScanHistory(Base):
     __tablename__ = "scan_history"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=True)
     scanned_barcode = Column(String, nullable=True)
@@ -49,7 +47,7 @@ class ScanHistory(Base):
 class Allergen(Base):
     __tablename__ = "allergens"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, nullable=False)
 
 
@@ -57,33 +55,23 @@ class Allergen(Base):
 class AllergenTrigger(Base):
     __tablename__ = "allergen_triggers"
 
-    id = Column(Integer, primary_key=True, index=True)
-    allergen_id = Column(Integer, ForeignKey("allergens.id"), nullable=False)
-    trigger_word = Column(String, nullable=False)
-
-    __table_args__ = (
-        Index("index_allergen_triggers_allergen", "allergen_id"),
-    )
+    allergen_id = Column(Integer, ForeignKey("allergens.id"), primary_key=True)
+    trigger_word = Column(String, primary_key=True)
 
 
 # Таблица аллергенов у пользователей
 class UserAllergen(Base):
     __tablename__ = "user_allergens"
 
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    allergen_id = Column(Integer, ForeignKey("allergens.id"), nullable=False)
-
-    __table_args__ = (
-        Index("index_user_allergens_user", "user_id"),
-    )
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    allergen_id = Column(Integer, ForeignKey("allergens.id"), primary_key=True)
 
 
 # Таблица записей в дневнике питания
 class FoodDiaryEntry(Base):
     __tablename__ = "food_diary_entries"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=True)
 
@@ -101,5 +89,5 @@ class FoodDiaryEntry(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     __table_args__ = (
-        Index("index_food_diary_user_time", "user_id", "created_at"),
+        Index("index_food_diary_user_date", "user_id", "entry_date"),
     )

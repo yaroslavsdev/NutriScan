@@ -19,6 +19,5 @@ jobs:
           script: |
             cd /app/Backend
             git pull origin main
-            docker compose down
             docker compose up -d --build
-            docker compose exec app alembic stamp head
+            docker compose exec app alembic upgrade head

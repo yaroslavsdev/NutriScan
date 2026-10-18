@@ -20,7 +20,7 @@ interface ProductsApi {
         @Body request: ProductCreateDto
     ): ProductDto
 
-    @GET("products/history/scans")
+    @GET("history/scans")
     suspend fun getScanHistory(
         @Query("limit") limit: Int = 100
     ) : List<ScanHistoryDto>
