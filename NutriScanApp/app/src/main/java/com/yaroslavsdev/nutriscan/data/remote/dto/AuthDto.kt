@@ -11,10 +11,15 @@ data class AuthRequest(
 data class AuthResponse(
     @SerializedName("access_token")
     val accessToken: String,
+    @SerializedName("refresh_token")
+    val refreshToken: String,
     @SerializedName("token_type")
-    val tokenType: String,
-    @SerializedName("user_id")
-    val userId: Int
+    val tokenType: String
+)
+
+data class RefreshRequest(
+    @SerializedName("refresh_token")
+    val refreshToken: String
 )
 
 data class UsernameUpdateDto(

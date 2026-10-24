@@ -6,6 +6,7 @@ import com.yaroslavsdev.nutriscan.data.remote.dto.AuthResponse
 import com.yaroslavsdev.nutriscan.data.remote.dto.CaloriesUpdateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.PasswordUpdateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.PasswordUpdateResponseDto
+import com.yaroslavsdev.nutriscan.data.remote.dto.RefreshRequest
 import com.yaroslavsdev.nutriscan.data.remote.dto.UserProfileDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.UsernameUpdateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.UsernameUpdateResponseDto
@@ -20,8 +21,11 @@ interface AuthApi {
     @POST("auth/login")
     suspend fun login(@Body request: AuthRequest): AuthResponse
 
-    @GET("auth/me")
+    @GET("auth/user")
     suspend fun getUser(): UserProfileDto
+
+    @POST("auth/logout")
+    suspend fun logout(@Body request: RefreshRequest)
 
     @POST("auth/allergens")
     suspend fun saveAllergens(@Body request: AllergensUpdateDto)

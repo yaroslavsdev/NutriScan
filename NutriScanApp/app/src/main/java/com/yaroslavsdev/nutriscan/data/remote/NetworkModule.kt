@@ -28,6 +28,7 @@ object NetworkModule {
                 }
                 chain.proceed(requestBuilder.build())
             }
+            .authenticator(TokenAuthenticator(tokenManager, BASE_URL))
             .build()
 
         val gson = GsonBuilder()

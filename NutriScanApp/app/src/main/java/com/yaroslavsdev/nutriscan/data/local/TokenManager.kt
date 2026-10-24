@@ -18,7 +18,16 @@ class TokenManager(context: Context) {
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 
-    fun saveToken(token: String) = prefs.edit { putString("jwt_token", token) }
+    fun saveTokens(accessToken: String, refreshToken: String) = prefs.edit {
+        putString("jwt_token", accessToken)
+        putString("refresh_token", refreshToken)
+    }
     fun getToken(): String? = prefs.getString("jwt_token", null)
-    fun deleteToken() = prefs.edit { remove("jwt_token") }
+
+    fun getRefreshToken(): String? = prefs.getString("refresh_token", null)
+
+    fun deleteTokens() = prefs.edit {
+        remove("jwt_token")
+        remove("refresh_token")
+    }
 }

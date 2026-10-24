@@ -6,6 +6,7 @@ import com.yaroslavsdev.nutriscan.data.remote.dto.AllergensUpdateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.AuthRequest
 import com.yaroslavsdev.nutriscan.data.remote.dto.CaloriesUpdateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.PasswordUpdateDto
+import com.yaroslavsdev.nutriscan.data.remote.dto.RefreshRequest
 import com.yaroslavsdev.nutriscan.data.remote.dto.UserProfileDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.UsernameUpdateDto
 import retrofit2.HttpException
@@ -18,7 +19,7 @@ class AuthRepository(
     suspend fun login(email: String, pass: String): Result<Unit> {
         return try {
             val response = api.login(AuthRequest(email = email, password = pass))
-            tokenManager.saveToken(response.accessToken)
+            tokenManager.saveTokens(response.accessToken, response.refreshToken)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -34,7 +35,7 @@ class AuthRepository(
                     password = pass
                 )
             )
-            tokenManager.saveToken(response.accessToken)
+            tokenManager.saveTokens(response.accessToken, response.refreshToken)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -67,8 +68,18 @@ class AuthRepository(
         }
     }
 
-    fun logout() {
-        tokenManager.deleteToken()
+    suspend fun logout() {
+        val refreshToken = tokenManager.getRefreshToken()
+
+        if (refreshToken != null) {
+            try {
+                api.logout(RefreshRequest(refreshToken))
+            } catch (e: Exception) {
+
+            }
+        }
+
+        tokenManager.deleteTokens()
     }
 
     suspend fun updateUsername(username: String): Result<Unit> {
