@@ -67,7 +67,7 @@ fun ScannerScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Кнопка назад")
                     }
                     Text("Сканирование штрих-кода", style = MaterialTheme.typography.titleLarge)
                 }

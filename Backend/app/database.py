@@ -6,11 +6,15 @@ from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
-DB_USER = os.getenv("POSTGRES_USER", "postgres")
-DB_PASSWORD = os.getenv("POSTGRES_PASSWORD", "password")
-DB_NAME = os.getenv("POSTGRES_DB", "nutriscan")
+DB_USER = os.getenv("POSTGRES_USER")
+DB_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+DB_NAME = os.getenv("POSTGRES_DB")
 DB_HOST = os.getenv("DB_HOST", "db")
 DB_PORT = os.getenv("DB_PORT", "5432")
+
+for value in (DB_USER, DB_PASSWORD, DB_NAME):
+    if not value:
+        raise RuntimeError("Не заданы переменные окружения для БД")
 
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 

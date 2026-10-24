@@ -43,7 +43,7 @@ fun EditNameScreen(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Кнопка назад")
             }
             Text("Изменить имя", style = MaterialTheme.typography.titleLarge)
         }

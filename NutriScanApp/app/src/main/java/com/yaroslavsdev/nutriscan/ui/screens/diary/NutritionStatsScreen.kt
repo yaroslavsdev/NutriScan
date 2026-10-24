@@ -50,7 +50,7 @@ fun NutritionStatsScreen(
     ) {
         Row (verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Кнопка назад")
             }
             Text("Статистика БЖУ", style = MaterialTheme.typography.titleLarge)
         }

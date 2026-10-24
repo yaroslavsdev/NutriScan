@@ -41,7 +41,7 @@ fun ChangePasswordScreen(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Кнопка назад")
             }
             Text("Сменить пароль", style = MaterialTheme.typography.titleLarge)
         }

@@ -1,3 +1,5 @@
+from datetime import datetime, timezone, timedelta
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -22,8 +24,7 @@ def register(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     db.commit()
     db.refresh(new_user)
 
-    token = auth_utils.create_access_token(data={"sub": new_user.email})
-    return {"access_token": token, "token_type": "bearer"}
+    return issue_tokens(db, new_user)
 
 
 # Авторизация пользователя
@@ -33,11 +34,71 @@ def login(user: schemas.UserLogin, db: Session = Depends(database.get_db)):
     if not db_user or not auth_utils.verify_password(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Неверный email или пароль")
 
-    token = auth_utils.create_access_token(data={"sub": db_user.email})
-    return {"access_token": token, "token_type": "bearer"}
+    return issue_tokens(db, db_user)
 
 
-# Изменить имя пользователя
+def issue_tokens(db: Session, user: models.User) -> dict:
+    now = datetime.now(timezone.utc)
+
+    db.query(models.RefreshToken).filter(
+        models.RefreshToken.user_id == user.id,
+        models.RefreshToken.expires_at < now
+    ).delete()
+
+    refresh_token = auth_utils.create_refresh_token()
+    refresh_hash = auth_utils.hash_token(refresh_token)
+    expires_at = now + timedelta(days=auth_utils.REFRESH_TOKEN_DAYS)
+
+    db.add(models.RefreshToken(
+        user_id=user.id,
+        token_hash=refresh_hash,
+        expires_at=expires_at
+    ))
+    db.commit()
+
+    access_token = auth_utils.create_access_token(user.id)
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+
+@router.post("/refresh", response_model=schemas.Token)
+def refresh(data: schemas.RefreshRequest, db: Session = Depends(database.get_db)):
+    token_hash = auth_utils.hash_token(data.refresh_token)
+
+    saved = db.query(models.RefreshToken).filter(
+        models.RefreshToken.token_hash == token_hash
+    ).first()
+
+    if not saved or saved.expires_at < datetime.now(timezone.utc):
+        raise HTTPException(status_code=401, detail="Недействительный refresh-токен")
+
+    user = db.query(models.User).filter(models.User.id == saved.user_id).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="Пользователь не найден")
+
+    db.delete(saved)
+    db.commit()
+
+    return issue_tokens(db, user)
+
+
+# Выход из профиля
+@router.post("/logout")
+def logout(data: schemas.RefreshRequest, db: Session = Depends(database.get_db)):
+    token_hash = auth_utils.hash_token(data.refresh_token)
+    db.query(models.RefreshToken).filter(
+        models.RefreshToken.token_hash == token_hash
+    ).delete()
+    db.commit()
+
+    return {"status": "success"}
+
+
+# Изменение имени пользователя
 @router.post("/username")
 def update_username(
     data: schemas.UsernameUpdate,
@@ -50,7 +111,7 @@ def update_username(
     return {"status": "success", "username": current_user.username}
 
 
-# Сменить пароль
+# Изменение пароля
 @router.post("/password")
 def update_password(
     data: schemas.PasswordUpdate,
@@ -61,6 +122,7 @@ def update_password(
         raise HTTPException(status_code=400, detail="Неверный текущий пароль")
 
     current_user.password_hash = auth_utils.hash_password(data.new_password)
+    db.query(models.RefreshToken).filter(models.RefreshToken.user_id == current_user.id).delete()
     db.commit()
 
     return {"status": "success"}
@@ -78,7 +140,7 @@ def get_user_allergen_names(db: Session, user_id: int) -> list[str]:
 
 
 # Получение информации о пользователе
-@router.get("/me")
+@router.get("/user")
 def get_me(
         db: Session = Depends(database.get_db),
         current_user: models.User = Depends(dependencies.get_current_user)

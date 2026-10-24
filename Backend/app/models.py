@@ -12,6 +12,16 @@ class User(Base):
     daily_calorie_goal = Column(Integer, nullable=False, default=2000)
 
 
+# Таблица refresh-токенов
+class RefreshToken(Base):
+    __tablename__ = "refresh_tokens"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    token_hash = Column(String, unique=True, nullable=False)
+    expires_at = Column(DateTime(timezone=True), nullable=False)
+
+
 # Таблица Продуктов
 class Product(Base):
     __tablename__ = "products"
