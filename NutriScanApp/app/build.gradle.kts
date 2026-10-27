@@ -32,7 +32,7 @@ android {
                 !keyAlias.isNullOrEmpty() &&
                 !keyPassword.isNullOrEmpty()) {
 
-                val keystoreFile = file("${layout.buildDirectory.get().asFile}/tmp/release.keystore")
+                val keystoreFile = file("${rootProject.layout.buildDirectory.get().asFile}/tmp/release.keystore")
                 keystoreFile.parentFile.mkdirs()
 
                 val decodedBytes = Base64.getDecoder().decode(keystoreBase64.trim())
@@ -42,6 +42,12 @@ android {
                 storePassword = keystorePassword
                 this.keyAlias = keyAlias
                 this.keyPassword = keyPassword
+            } else {
+                val debugConfig = signingConfigs.getByName("debug")
+                storeFile = debugConfig.storeFile
+                storePassword = debugConfig.storePassword
+                this.keyAlias = debugConfig.keyAlias
+                this.keyPassword = debugConfig.keyPassword
             }
         }
     }
