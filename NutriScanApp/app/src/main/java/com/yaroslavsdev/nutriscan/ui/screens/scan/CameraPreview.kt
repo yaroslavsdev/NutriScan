@@ -1,7 +1,8 @@
 package com.yaroslavsdev.nutriscan.ui.screens.scan
 
+import android.util.Size
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -17,7 +18,7 @@ import androidx.core.content.ContextCompat
 
 @Composable
 fun CameraPreview(
-    viewModel: ScanViewModel
+    onImageCaptureReady: (ImageCapture) -> Unit
 ) {
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
@@ -28,22 +29,15 @@ fun CameraPreview(
     ) {
         AndroidView(
             modifier = Modifier.fillMaxSize(),
-            factory = {
-                val previewView = PreviewView(it)
-
+            factory = { context ->
+                val previewView = PreviewView(context)
                 val preview = Preview.Builder().build()
-                val analysis = ImageAnalysis.Builder()
-                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+
+                val imageCapture = ImageCapture.Builder()
+                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                     .build()
 
-                analysis.setAnalyzer(
-                    ContextCompat.getMainExecutor(it),
-                    BarcodeAnalyzer { code ->
-                        viewModel.onBarcodeDetected(code)
-                    }
-                )
-
-                val cameraProviderFuture = ProcessCameraProvider.getInstance(it)
+                val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
                 cameraProviderFuture.addListener({
                     val cameraProvider = cameraProviderFuture.get()
                     cameraProvider.unbindAll()
@@ -51,10 +45,11 @@ fun CameraPreview(
                         lifecycleOwner,
                         CameraSelector.DEFAULT_BACK_CAMERA,
                         preview,
-                        analysis
+                        imageCapture
                     )
-                    preview.setSurfaceProvider(previewView.surfaceProvider)
-                }, ContextCompat.getMainExecutor(it))
+                    preview.surfaceProvider = previewView.surfaceProvider
+                    onImageCaptureReady(imageCapture)
+                }, ContextCompat.getMainExecutor(context))
 
                 previewView
             }

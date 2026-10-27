@@ -1,8 +1,10 @@
 package com.yaroslavsdev.nutriscan.ui.screens.scan
 
 import android.Manifest
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.ImageCapture
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -19,8 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.yaroslavsdev.nutriscan.ui.navigation.Screen
@@ -36,8 +43,8 @@ fun ScannerScreen(
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        viewModel.onPermissionResult(granted)
+    ) { provided ->
+        viewModel.onPermissionResult(provided)
     }
 
     LaunchedEffect(Unit) {
@@ -46,9 +53,7 @@ fun ScannerScreen(
 
     when {
         !state.hasPermission -> {
-            PermissionDeniedScreen {
-                permissionLauncher.launch(Manifest.permission.CAMERA)
-            }
+            PermissionDeniedScreen({ permissionLauncher.launch(Manifest.permission.CAMERA) })
         }
 
         state.barcode != null -> {
@@ -59,26 +64,54 @@ fun ScannerScreen(
         }
 
         else -> {
+            val context = LocalContext.current
+            var imageCapture by remember { mutableStateOf<ImageCapture?>(null) }
+            var isProcessing by remember { mutableStateOf(false) }
+
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize()
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, "Кнопка назад")
                     }
-                    Text("Сканирование штрих-кода", style = MaterialTheme.typography.titleLarge)
+                    Text("Сканирование штрих-кода", style = MaterialTheme.typography.titleMedium)
                 }
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding(horizontal = 16.dp, vertical = 16.dp)
+                        .padding(horizontal = 12.dp)
                 ) {
-                    CameraPreview(viewModel)
+                    CameraPreview(onImageCaptureReady = { imageCapture = it })
+                }
+
+                Button(
+                    onClick = {
+                        val capture = imageCapture ?: return@Button
+                        isProcessing = true
+
+                        takePhotoAndScan(context, capture) { code ->
+                            isProcessing = false
+                            if (code != null) {
+                                viewModel.onBarcodeDetected(code)
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Штрих-код не найден, попробуйте ещё раз",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    },
+                    enabled = imageCapture != null && !isProcessing,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    shape = MaterialTheme.shapes.large
+                ) {
+                    Text(if (isProcessing) "Обработка..." else "Сделать фото")
                 }
             }
         }

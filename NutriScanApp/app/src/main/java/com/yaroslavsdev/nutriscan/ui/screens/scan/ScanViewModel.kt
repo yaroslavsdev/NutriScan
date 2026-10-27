@@ -9,9 +9,9 @@ class ScanViewModel : ViewModel() {
     private val _state = MutableStateFlow(ScanUiState())
     val state = _state.asStateFlow()
 
-    fun onPermissionResult(granted: Boolean) {
+    fun onPermissionResult(provided: Boolean) {
         _state.update {
-            it.copy(hasPermission = granted)
+            it.copy(hasPermission = provided)
         }
     }
 
