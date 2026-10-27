@@ -93,7 +93,7 @@ fun MainContentScreen(
                 val barcode = backStackEntry.arguments?.getString("barcode") ?: ""
                 AddProductScreen(
                     barcode = barcode,
-                    navController = bottomNavController
+                    navController = bottomNavController,
                 )
             }
         }

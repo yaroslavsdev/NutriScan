@@ -1,7 +1,6 @@
 package com.yaroslavsdev.nutriscan.ui.screens.scan
 
 import android.content.Context
-import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageCapture
@@ -11,7 +10,6 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
-import java.io.File
 
 private val options = BarcodeScannerOptions.Builder()
     .setBarcodeFormats(Barcode.FORMAT_EAN_8, Barcode.FORMAT_EAN_13)

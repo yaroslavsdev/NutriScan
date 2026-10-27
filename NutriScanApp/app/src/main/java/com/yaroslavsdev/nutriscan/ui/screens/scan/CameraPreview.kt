@@ -1,6 +1,5 @@
 package com.yaroslavsdev.nutriscan.ui.screens.scan
 
-import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview

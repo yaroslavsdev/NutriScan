@@ -1,12 +1,13 @@
 package com.yaroslavsdev.nutriscan.ui.screens.addProduct
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -22,10 +23,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
+
+private fun String.toNutritionFloat(): Float? {
+    val value = trim()
+        .replace(',', '.')
+        .toFloatOrNull()
+
+    if (value == null || value < 0f) {
+        return null
+    }
+
+    return value
+}
 
 @Composable
 fun AddProductScreen(
@@ -51,24 +65,44 @@ fun AddProductScreen(
     var fats by remember { mutableStateOf("") }
     var carbs by remember { mutableStateOf("") }
 
+    var showErrors by remember { mutableStateOf(false) }
+
+    val isNameValid = name.isNotBlank()
+    val isIngredientsValid = ingredients.isNotBlank()
+
+    val isCaloriesValid = calories.toNutritionFloat() != null
+    val isProteinsValid = proteins.toNutritionFloat() != null
+    val isFatsValid = fats.toNutritionFloat() != null
+    val isCarbsValid = carbs.toNutritionFloat() != null
+
+    val isFormValid = isNameValid && isIngredientsValid
+            && isCaloriesValid && isProteinsValid && isFatsValid && isCarbsValid
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text("Добавление товара", style = MaterialTheme.typography.headlineMedium, fontSize = 24.sp)
 
         Text(
             text = "Штрих-код: $barcode",
-            modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
+            style = MaterialTheme.typography.bodyLarge
         )
 
         OutlinedTextField(
             value = name,
-            onValueChange = { name = it },
+            onValueChange = { name = it
+                showErrors = false },
             label = { Text("Название") },
+            isError = showErrors && !isNameValid,
+            supportingText = {
+                if (showErrors && !isNameValid) Text("Название не может быть пустым")
+            },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -76,74 +110,116 @@ fun AddProductScreen(
             value = brand,
             onValueChange = { brand = it },
             label = { Text("Бренд (необязательно)") },
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            supportingText = { },
+            modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
             value = ingredients,
-            onValueChange = { ingredients = it },
+            onValueChange = { ingredients = it
+                showErrors = false },
             label = { Text("Состав") },
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            isError = showErrors && !isIngredientsValid,
+            supportingText = {
+                if (showErrors && !isIngredientsValid) Text("Укажите состав продукта")
+            },
+            modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
             value = calories,
-            onValueChange = { calories = it },
-            label = { Text("Калории") },
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            onValueChange = { input ->
+                val normalized = input.replace(',', '.')
+                val isValid = normalized.count { it == '.' } <= 1 && normalized.all { it.isDigit() || it == '.' }
+                if (isValid) {
+                    calories = input
+                }
+                showErrors = false
+            },
+            label = { Text("Калории (на 100г)") },
+            isError = showErrors && !isCaloriesValid,
+            supportingText = {
+                if (showErrors && !isCaloriesValid) Text("Введите число")
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
             value = proteins,
-            onValueChange = { proteins = it },
-            label = { Text("Белки") },
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            onValueChange = { input ->
+                val normalized = input.replace(',', '.')
+                val isValid = normalized.count { it == '.' } <= 1 && normalized.all { it.isDigit() || it == '.' }
+                if (isValid) {
+                    proteins = input
+                }
+                showErrors = false
+            },
+            label = { Text("Белки (на 100г)") },
+            isError = showErrors && !isProteinsValid,
+            supportingText = {
+                if (showErrors && !isProteinsValid) Text("Введите число")
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
             value = fats,
-            onValueChange = { fats = it },
-            label = { Text("Жиры") },
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            onValueChange = { input ->
+                val normalized = input.replace(',', '.')
+                val isValid = normalized.count { it == '.' } <= 1 && normalized.all { it.isDigit() || it == '.' }
+                if (isValid) {
+                    fats = input
+                }
+                showErrors = false
+            },
+            label = { Text("Жиры (на 100г)") },
+            isError = showErrors && !isFatsValid,
+            supportingText = {
+                if (showErrors && !isFatsValid) Text("Введите число")
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
             value = carbs,
-            onValueChange = { carbs = it },
-            label = { Text("Углеводы") },
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            onValueChange = { input ->
+                val normalized = input.replace(',', '.')
+                val isValid = normalized.count { it == '.' } <= 1 && normalized.all { it.isDigit() || it == '.' }
+                if (isValid) {
+                    carbs = input
+                }
+                showErrors = false
+            },
+            label = { Text("Углеводы (на 100г)") },
+            isError = showErrors && !isCarbsValid,
+            supportingText = {
+                if (showErrors && !isCarbsValid) Text("Введите число")
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Button(
             onClick = {
-                val caloriesValue = calories.toFloatOrNull()
-                val proteinsValue = proteins.toFloatOrNull()
-                val fatsValue = fats.toFloatOrNull()
-                val carbsValue = carbs.toFloatOrNull()
-
-                val isValid = name.isNotBlank() &&
-                        ingredients.isNotBlank() &&
-                        caloriesValue != null &&
-                        proteinsValue != null &&
-                        fatsValue != null &&
-                        carbsValue != null
-
-                if (isValid) {
+                if (isFormValid) {
                     viewModel.saveProduct(
                         barcode = barcode,
                         name = name,
                         brand = brand,
                         ingredients = ingredients,
-                        calories = caloriesValue,
-                        proteins = proteinsValue,
-                        fats = fatsValue,
-                        carbs = carbsValue,
+                        calories = calories.toNutritionFloat()!!,
+                        proteins = proteins.toNutritionFloat()!!,
+                        fats = fats.toNutritionFloat()!!,
+                        carbs = carbs.toNutritionFloat()!!,
                         onSuccess = {
                             navController.popBackStack()
                         }
                     )
                 } else {
-                    Toast.makeText(context, "Заполните все поля корректно", Toast.LENGTH_SHORT).show()
+                    showErrors = true
                 }
             },
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
