@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: NutriScanApp
 
     steps:
       - name: Checkout Repository
@@ -20,28 +23,15 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-        working-directory: NutriScanApp
+      - name: Build and Rename APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease
+          cd app/build/outputs/apk/release
+          mv app-release-unsigned.apk NutriScan.apk
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
-        working-directory: NutriScanApp
-
-      - name: Sign APK
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
-        with:
-          releaseDirectory: NutriScanApp/app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.KEYSTORE }}
-          alias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: "34.0.0"
-
-      - name: Upload Signed APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: NutriScan-App
-          path: ${{ steps.sign_app.outputs.signedReleaseFile }}
+          path: NutriScanApp/app/build/outputs/apk/release/NutriScan.apk

@@ -1,3 +1,5 @@
+import java.util.Base64
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -11,16 +13,44 @@ android {
     defaultConfig {
         applicationId = "com.yaroslavsdev.nutriscan"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            val keystoreBase64 = System.getenv("KEYSTORE")
+            val keystorePassword = System.getenv("KEYSTORE_PASSWORD")
+            val keyAlias = System.getenv("KEY_ALIAS")
+            val keyPassword = System.getenv("KEY_PASSWORD")
+
+            if (!keystoreBase64.isNullOrEmpty() &&
+                !keystorePassword.isNullOrEmpty() &&
+                !keyAlias.isNullOrEmpty() &&
+                !keyPassword.isNullOrEmpty()) {
+
+                val keystoreFile = file("${layout.buildDirectory.get().asFile}/tmp/release.keystore")
+                keystoreFile.parentFile.mkdirs()
+
+                val decodedBytes = Base64.getDecoder().decode(keystoreBase64.trim())
+                keystoreFile.writeBytes(decodedBytes)
+
+                storeFile = keystoreFile
+                storePassword = keystorePassword
+                this.keyAlias = keyAlias
+                this.keyPassword = keyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
