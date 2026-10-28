@@ -35,47 +35,6 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Товар с таким штрих-кодом уже есть")
 
 
-# Импорт нескольких товаров
-@router.post("/import")
-def import_products(
-    file: UploadFile = File(...),
-    db: Session = Depends(get_db)
-):
-    data = json.load(file.file)
-
-    unique = {item["barcode"]: item for item in data}
-
-    existing = set(
-        row.barcode for row in
-        db.query(models.Product.barcode)
-          .filter(models.Product.barcode.in_(unique.keys()))
-          .all()
-    )
-
-    to_insert = [
-        models.Product(
-            barcode=item["barcode"],
-            name=item["name"],
-            brand=item.get("brand"),
-            ingredients=item.get("ingredients", ""),
-            calories=item["nutrition"]["calories"],
-            proteins=item["nutrition"]["proteins"],
-            fats=item["nutrition"]["fats"],
-            carbs=item["nutrition"]["carbs"],
-        )
-        for item in unique.values()
-        if item["barcode"] not in existing
-    ]
-
-    batch_size = 500
-    for i in range(0, len(to_insert), batch_size):
-        db.bulk_save_objects(to_insert[i:i + batch_size])
-        db.flush()
-
-    db.commit()
-    return {"added": len(to_insert), "skipped": len(data) - len(to_insert)}
-
-
 # Получение аллергенов для конкретного пользователя по составу продукта
 def get_matched_allergens(db: Session, ingredients: str, user_id: int) -> list[str]:
     ingredients_lower = ingredients.lower()
@@ -95,7 +54,7 @@ def get_matched_allergens(db: Session, ingredients: str, user_id: int) -> list[s
         if index == -1:
             continue
 
-        words_before = ingredients[max(0, index - 30):index]
+        words_before = ingredients_lower[max(0, index - 30):index]
         is_negated = any(negative in words_before for negative in NEGATION_WORDS)
 
         if not is_negated:
