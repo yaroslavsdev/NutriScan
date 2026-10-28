@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime, date as date_type
 
 MEAL_TYPES = ["breakfast", "lunch", "dinner", "snack"]
@@ -30,8 +30,7 @@ class ProductResponse(BaseModel):
     carbs: float
     matched_allergens: list[str] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # История сканирований
@@ -48,8 +47,7 @@ class ScanHistoryItem(BaseModel):
     carbs: float | None = None
     scan_time: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Профиль
@@ -101,8 +99,7 @@ class DiaryEntryItem(BaseModel):
     carbs: float
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class DiaryDayResponse(BaseModel):
     date: date_type

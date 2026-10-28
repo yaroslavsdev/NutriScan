@@ -1,8 +1,10 @@
 package com.yaroslavsdev.nutriscan.ui.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -15,6 +17,6 @@ sealed class BottomNavItem(
 ) : MenuTab(route, label) {
     object Home: BottomNavItem("home", "Главная", Icons.Default.Home)
     object Diary: BottomNavItem("diary", "Дневник", Icons.Default.DateRange)
-    object History: BottomNavItem("history", "История", Icons.Default.Refresh)
+    object History: BottomNavItem("history", "История", Icons.AutoMirrored.Default.List)
     object Profile: BottomNavItem("profile", "Профиль", Icons.Default.Person,)
 }

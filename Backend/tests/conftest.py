@@ -1,7 +1,10 @@
+import os
+os.environ.setdefault("SECRET_KEY", "test-secret-key")
+
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
+from app import models
 from app.database import Base
 
 @pytest.fixture
@@ -12,3 +15,16 @@ def db_session():
     yield session
     session.close()
 
+
+@pytest.fixture
+def user_with_gluten(db_session):
+    user = models.User(username="test", email="t@t.com", password_hash="x")
+    allergen = models.Allergen(name="gluten")
+    db_session.add_all([user, allergen])
+    db_session.commit()
+
+    db_session.add(models.AllergenTrigger(allergen_id=allergen.id, trigger_word="глютен"))
+    db_session.add(models.UserAllergen(user_id=user.id, allergen_id=allergen.id))
+    db_session.commit()
+
+    return user
