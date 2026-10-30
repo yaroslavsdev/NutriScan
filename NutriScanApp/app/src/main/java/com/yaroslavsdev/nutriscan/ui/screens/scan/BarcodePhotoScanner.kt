@@ -10,6 +10,7 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.yaroslavsdev.nutriscan.domain.usecase.BarcodeValidator.isValidBarcodeSum
 
 private val options = BarcodeScannerOptions.Builder()
     .setBarcodeFormats(Barcode.FORMAT_EAN_8, Barcode.FORMAT_EAN_13)
@@ -20,7 +21,7 @@ private val scanner = BarcodeScanning.getClient(options)
 fun takePhotoAndScan(
     context: Context,
     imageCapture: ImageCapture,
-    onResult: (String?) -> Unit
+    onResult: (ScanResult) -> Unit
 ) {
     imageCapture.takePicture(
         ContextCompat.getMainExecutor(context),
@@ -38,26 +39,37 @@ fun takePhotoAndScan(
 
                         scanner.process(image)
                             .addOnSuccessListener { barcodes ->
-                                onResult(barcodes.firstOrNull()?.rawValue)
+                                val barcode = barcodes.firstOrNull()?.rawValue
+                                when {
+                                    barcode == null -> {
+                                        onResult(ScanResult.NoBarcodeFound)
+                                    }
+                                    isValidBarcodeSum(barcode) -> {
+                                        onResult(ScanResult.Success(barcode))
+                                    }
+                                    else -> {
+                                        onResult(ScanResult.InvalidCheckSum)
+                                    }
+                                }
                             }
-                            .addOnFailureListener {
-                                onResult(null)
+                            .addOnFailureListener { e ->
+                                onResult(ScanResult.Failure(e))
                             }
                             .addOnCompleteListener {
                                 imageProxy.close()
                             }
                     } else {
                         imageProxy.close()
-                        onResult(null)
+                        onResult(ScanResult.NoBarcodeFound)
                     }
                 } catch (e: Exception) {
                     imageProxy.close()
-                    onResult(null)
+                    onResult(ScanResult.Failure(e))
                 }
             }
 
             override fun onError(exception: ImageCaptureException) {
-                onResult(null)
+                onResult(ScanResult.Failure(exception))
             }
         }
     )

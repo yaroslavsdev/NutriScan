@@ -92,16 +92,21 @@ fun ScannerScreen(
                         val capture = imageCapture ?: return@Button
                         isProcessing = true
 
-                        takePhotoAndScan(context, capture) { code ->
+                        takePhotoAndScan(context, capture) { result ->
                             isProcessing = false
-                            if (code != null) {
-                                viewModel.onBarcodeDetected(code)
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Штрих-код не найден, попробуйте ещё раз",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            when (result) {
+                                is ScanResult.Success -> {
+                                    viewModel.onBarcodeDetected(result.barcode)
+                                }
+                                ScanResult.InvalidCheckSum -> {
+                                    Toast.makeText(context, "Неверная контрольная сумма штрих-кода", Toast.LENGTH_SHORT).show()
+                                }
+                                ScanResult.NoBarcodeFound -> {
+                                    Toast.makeText(context, "Штрих-код не обнаружен", Toast.LENGTH_SHORT).show()
+                                }
+                                is ScanResult.Failure -> {
+                                    Toast.makeText(context, "Ошибка камеры или сканера", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     },
