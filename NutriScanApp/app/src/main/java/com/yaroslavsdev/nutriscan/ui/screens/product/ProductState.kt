@@ -1,4 +1,4 @@
-package com.yaroslavsdev.nutriscan.ui.state
+package com.yaroslavsdev.nutriscan.ui.screens.product
 
 import com.yaroslavsdev.nutriscan.domain.model.Product
 

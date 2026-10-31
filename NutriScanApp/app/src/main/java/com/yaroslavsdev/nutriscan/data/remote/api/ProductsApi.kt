@@ -13,7 +13,8 @@ import retrofit2.http.Query
 interface ProductsApi {
     @GET("products/{barcode}")
     suspend fun getProduct(
-        @Path("barcode") barcode: String
+        @Path("barcode") barcode: String,
+        @Query("for_viewing") forViewing: Boolean = false
     ) : ProductDto
 
     @POST("products")

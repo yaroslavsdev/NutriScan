@@ -13,9 +13,9 @@ import java.time.ZoneId
 class ProductsRepository(
     private val api: ProductsApi,
 ) {
-    suspend fun getProduct(barcode: String): Result<Product> {
+    suspend fun getProduct(barcode: String, forViewing: Boolean = false): Result<Product> {
         return try {
-            val dto = api.getProduct(barcode)
+            val dto = api.getProduct(barcode, forViewing)
             Result.success(dto.toDomain())
         } catch (e: HttpException) {
             when (e.code()) {

@@ -51,9 +51,15 @@ fun CheckHistoryScreen(
             }
             else -> {
                 HistoryList(
-                    state,
-                    { barcode -> navController.navigate(Screen.ProductScreen.createRoute(barcode)) }
+                    state
+                ) { barcode ->
+                    navController.navigate(
+                        Screen.ProductScreen.createRoute(
+                            barcode,
+                            forViewing = true
+                        )
                     )
+                }
             }
         }
     }

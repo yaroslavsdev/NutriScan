@@ -35,12 +35,13 @@ import androidx.navigation.NavController
 import com.yaroslavsdev.nutriscan.ui.components.ProductInfoCard
 import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import com.yaroslavsdev.nutriscan.ui.screens.addToDiary.AddToDiaryDialog
-import com.yaroslavsdev.nutriscan.ui.state.ProductState
+import com.yaroslavsdev.nutriscan.ui.screens.product.ProductState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProductScreen(
     barcode: String,
+    forViewing: Boolean,
     navController: NavController,
     onBack: () -> Unit,
     viewModel: ProductViewModel = koinViewModel()
@@ -49,7 +50,7 @@ fun ProductScreen(
     val context = LocalContext.current
 
     LaunchedEffect(barcode) {
-        viewModel.loadProduct(barcode)
+        viewModel.loadProduct(barcode, forViewing)
     }
 
     Column(

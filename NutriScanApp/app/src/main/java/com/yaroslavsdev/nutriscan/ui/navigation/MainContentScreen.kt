@@ -76,11 +76,20 @@ fun MainContentScreen(
 
             composable(
                 route = Screen.ProductScreen.route,
-                arguments = listOf(navArgument("barcode") { type = NavType.StringType })
+                arguments = listOf(
+                    navArgument("barcode") { type = NavType.StringType },
+                    navArgument("forViewing") {
+                        type = NavType.BoolType
+                        defaultValue = false
+                    }
+                )
             ) { backStackEntry ->
                 val barcode = backStackEntry.arguments?.getString("barcode") ?: ""
+                val forViewing = backStackEntry.arguments?.getBoolean("forViewing") ?: false
+
                 ProductScreen(
                     barcode = barcode,
+                    forViewing = forViewing,
                     navController = bottomNavController,
                     onBack = { bottomNavController.popBackStack() }
                 )

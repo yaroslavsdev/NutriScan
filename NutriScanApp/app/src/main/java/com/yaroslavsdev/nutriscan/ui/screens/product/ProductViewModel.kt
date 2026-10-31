@@ -3,7 +3,6 @@ package com.yaroslavsdev.nutriscan.ui.screens.product
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yaroslavsdev.nutriscan.data.repository.ProductsRepository
-import com.yaroslavsdev.nutriscan.ui.state.ProductState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -14,7 +13,7 @@ class ProductViewModel(
     private val _state = MutableStateFlow<ProductState>(ProductState.Idle)
     val state: StateFlow<ProductState> = _state
 
-    fun loadProduct(barcode: String) {
+    fun loadProduct(barcode: String, forViewing: Boolean = false) {
         val currentState = _state.value
         if (currentState is ProductState.Success && currentState.product.barcode == barcode) {
             return
@@ -23,7 +22,7 @@ class ProductViewModel(
         viewModelScope.launch {
             _state.value = ProductState.Loading
 
-            repository.getProduct(barcode).fold(
+            repository.getProduct(barcode, forViewing).fold(
                 onSuccess = { _state.value = ProductState.Success(it) },
                 onFailure = { throwable ->
                     _state.value = when (throwable.message) {

@@ -22,9 +22,9 @@ sealed class Screen(
         }
     }
 
-    object ProductScreen : Screen("product_screen/{barcode}") {
-        fun createRoute(barcode: String): String {
-            return "product_screen/$barcode"
+    object ProductScreen : Screen("product_screen/{barcode}?forViewing={forViewing}") {
+        fun createRoute(barcode: String, forViewing: Boolean = false): String {
+            return "product_screen/$barcode?forViewing=$forViewing"
         }
     }
 
