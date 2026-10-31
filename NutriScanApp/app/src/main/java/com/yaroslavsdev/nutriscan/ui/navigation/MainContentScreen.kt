@@ -94,11 +94,16 @@ fun MainContentScreen(
                 AddProductScreen(
                     barcode = barcode,
                     navController = bottomNavController,
+                    onBack = { bottomNavController.popBackStack() }
                 )
             }
 
             composable(Screen.AddCustomProductScreen.route) {
-                AddProductScreen(barcode = null, navController = bottomNavController)
+                AddProductScreen(
+                    barcode = null,
+                    navController = bottomNavController,
+                    onBack = { bottomNavController.popBackStack() }
+                )
             }
         }
 

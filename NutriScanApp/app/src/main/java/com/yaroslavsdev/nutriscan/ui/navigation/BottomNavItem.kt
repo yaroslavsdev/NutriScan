@@ -16,5 +16,5 @@ sealed class BottomNavItem(
     object Home: BottomNavItem("home", "Главная", Icons.Default.Home)
     object Diary: BottomNavItem("diary", "Дневник", Icons.Default.DateRange)
     object History: BottomNavItem("history", "История", Icons.AutoMirrored.Default.List)
-    object Profile: BottomNavItem("profile", "Профиль", Icons.Default.Person,)
+    object Profile: BottomNavItem("profile", "Профиль", Icons.Default.Person)
 }
