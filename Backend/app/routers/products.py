@@ -1,7 +1,6 @@
-import json
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app import models, dependencies
@@ -35,6 +34,7 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     except:
         db.rollback()
         raise HTTPException(status_code=400, detail="Товар с таким штрих-кодом уже есть")
+
 
 # Добавление товара без штрих-кода
 @router.post("/custom", response_model=ProductResponse)
@@ -91,17 +91,9 @@ def get_matched_allergens(db: Session, ingredients: str, user_id: int) -> list[s
     return list(matched)
 
 
-# Получение одного товара
-@router.get("/{barcode}", response_model=ProductResponse)
-def get_product_by_barcode(
-    barcode: str,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(dependencies.get_current_user)
-):
-    product = db.query(models.Product).filter(models.Product.barcode == barcode).first()
-
+def save_scan(db: Session, user_id: int, barcode: str, product):
     db.add(models.ScanHistory(
-        user_id=current_user.id,
+        user_id=user_id,
         product_id=product.id if product else None,
         scanned_barcode=barcode if not product else None,
         status="success" if product else "not_found",
@@ -110,7 +102,7 @@ def get_product_by_barcode(
 
     old_ids = (
         db.query(models.ScanHistory.id)
-        .filter(models.ScanHistory.user_id == current_user.id)
+        .filter(models.ScanHistory.user_id == user_id)
         .order_by(models.ScanHistory.scan_time.desc())
         .offset(100)
         .all()
@@ -123,6 +115,20 @@ def get_product_by_barcode(
         ).delete(synchronize_session=False)
 
     db.commit()
+
+
+# Получение одного товара
+@router.get("/{barcode}", response_model=ProductResponse)
+def get_product_by_barcode(
+    barcode: str,
+    for_viewing: bool = False,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(dependencies.get_current_user)
+):
+    product = db.query(models.Product).filter(models.Product.barcode == barcode).first()
+
+    if not for_viewing:
+        save_scan(db, current_user.id, barcode, product)
 
     if not product:
         raise HTTPException(status_code=404, detail="Товар не найден")
