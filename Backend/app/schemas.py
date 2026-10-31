@@ -97,6 +97,7 @@ class DiaryEntryCreate(BaseModel):
 
 class DiaryEntryItem(BaseModel):
     id: int
+    barcode: str | None = None
     product_name: str
     weight_grams: float
     calories: float

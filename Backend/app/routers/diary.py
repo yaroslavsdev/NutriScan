@@ -53,8 +53,9 @@ def get_diary_day(
         db: Session = Depends(get_db),
         current_user: models.User = Depends(dependencies.get_current_user),
 ):
-    entries = (
-        db.query(models.FoodDiaryEntry)
+    rows = (
+        db.query(models.FoodDiaryEntry, models.Product.barcode)
+        .outerjoin(models.Product, models.FoodDiaryEntry.product_id == models.Product.id)
         .filter(
             models.FoodDiaryEntry.user_id == current_user.id,
             models.FoodDiaryEntry.entry_date == date,
@@ -64,8 +65,23 @@ def get_diary_day(
     )
 
     grouped = {"breakfast": [], "lunch": [], "dinner": [], "snack": []}
-    for entry in entries:
-        grouped[entry.meal_type].append(entry)
+    entries = []
+
+    for entry, barcode in rows:
+        entries.append(entry)
+
+        item = schemas.DiaryEntryItem(
+            id=entry.id,
+            barcode=barcode,
+            product_name=entry.product_name,
+            weight_grams=entry.weight_grams,
+            calories=entry.calories,
+            proteins=entry.proteins,
+            fats=entry.fats,
+            carbs=entry.carbs,
+            created_at=entry.created_at,
+        )
+        grouped[entry.meal_type].append(item)
 
     total_calories = sum(e.calories for e in entries)
     total_proteins = sum(e.proteins for e in entries)
