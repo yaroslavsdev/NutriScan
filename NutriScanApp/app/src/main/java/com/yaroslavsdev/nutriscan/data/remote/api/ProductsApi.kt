@@ -1,5 +1,6 @@
 package com.yaroslavsdev.nutriscan.data.remote.api
 
+import com.yaroslavsdev.nutriscan.data.remote.dto.CustomProductCreateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.ProductCreateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.ProductDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.ScanHistoryDto
@@ -18,6 +19,11 @@ interface ProductsApi {
     @POST("products")
     suspend fun addProduct(
         @Body request: ProductCreateDto
+    ): ProductDto
+
+    @POST("products/custom")
+    suspend fun addCustomProduct(
+        @Body request: CustomProductCreateDto
     ): ProductDto
 
     @GET("history/scans")

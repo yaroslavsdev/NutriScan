@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
 private fun String.toNutritionFloat(): Float? {
@@ -43,7 +44,7 @@ private fun String.toNutritionFloat(): Float? {
 
 @Composable
 fun AddProductScreen(
-    barcode: String,
+    barcode: String?,
     navController: NavController,
     viewModel: AddProductViewModel = koinViewModel()
 ) {
@@ -89,7 +90,7 @@ fun AddProductScreen(
         Text("Добавление товара", style = MaterialTheme.typography.headlineMedium, fontSize = 24.sp)
 
         Text(
-            text = "Штрих-код: $barcode",
+            text = if (barcode != null) "Штрих-код: $barcode" else "Товар без штрих-кода",
             modifier = Modifier.padding(bottom = 8.dp),
             style = MaterialTheme.typography.bodyLarge
         )
@@ -214,8 +215,14 @@ fun AddProductScreen(
                         proteins = proteins.toNutritionFloat()!!,
                         fats = fats.toNutritionFloat()!!,
                         carbs = carbs.toNutritionFloat()!!,
-                        onSuccess = {
-                            navController.popBackStack()
+                        onSuccess = { savedBarcode ->
+                            navController.navigate(Screen.ProductScreen.createRoute(savedBarcode)) {
+                                if (barcode != null) {
+                                    popUpTo(Screen.ProductScreen.route) { inclusive = true }
+                                } else {
+                                    popUpTo(Screen.AddCustomProductScreen.route) { inclusive = true }
+                                }
+                            }
                         }
                     )
                 } else {

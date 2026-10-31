@@ -33,4 +33,6 @@ sealed class Screen(
             return "addProductScreen/$barcode"
         }
     }
+
+    object AddCustomProductScreen : Screen("add_custom_product_screen")
 }

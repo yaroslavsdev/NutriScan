@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import com.yaroslavsdev.nutriscan.ui.screens.scan.ManualBarcodeDialog
@@ -30,17 +33,19 @@ fun HomeScreen(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        var onScanClicked = false
+        fun safeNavigate(route: String) {
+            val entry = navController.currentBackStackEntry
+            if (entry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
+                navController.navigate(route)
+            }
+        }
+
         var showManualDialog by remember { mutableStateOf(false) }
 
         Text("Проверьте продукт, нажав кнопку")
 
         Button(
-            onClick = {
-                if (!onScanClicked) {
-                    onScanClicked = true
-                    navController.navigate(Screen.ScannerScreen.route)
-                } },
+            onClick = { safeNavigate(Screen.ScannerScreen.route) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -67,6 +72,16 @@ fun HomeScreen(navController: NavHostController) {
                     navController.navigate(Screen.ProductScreen.createRoute(code))
                 }
             )
+        }
+
+        Button(
+            onClick = { safeNavigate(Screen.AddCustomProductScreen.route) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            shape = MaterialTheme.shapes.large
+        ) {
+            Text("Товар без штрих-кода")
         }
     }
 }

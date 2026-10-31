@@ -1,6 +1,7 @@
 package com.yaroslavsdev.nutriscan.data.repository
 
 import com.yaroslavsdev.nutriscan.data.remote.api.ProductsApi
+import com.yaroslavsdev.nutriscan.data.remote.dto.CustomProductCreateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.ProductCreateDto
 import com.yaroslavsdev.nutriscan.data.remote.dto.toDomain
 import com.yaroslavsdev.nutriscan.domain.model.Product
@@ -35,6 +36,20 @@ class ProductsRepository(
             when (e.code()) {
                 401 -> Result.failure(Exception("UNAUTHORIZED"))
                 404 -> Result.failure(Exception("NOT_FOUND"))
+                else -> Result.failure(e)
+            }
+        } catch (e: IOException) {
+            Result.failure(Exception("NO_CONNECTION"))
+        }
+    }
+
+    suspend fun addCustomProduct(request: CustomProductCreateDto): Result<Product> {
+        return try {
+            val dto = api.addCustomProduct(request)
+            Result.success(dto.toDomain())
+        } catch (e: HttpException) {
+            when (e.code()) {
+                401 -> Result.failure(Exception("UNAUTHORIZED"))
                 else -> Result.failure(e)
             }
         } catch (e: IOException) {

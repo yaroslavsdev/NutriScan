@@ -46,3 +46,10 @@ data class ProductCreateDto(
     val ingredients: String,
     val nutrition: NutritionDto
 )
+
+data class CustomProductCreateDto(
+    val name: String,
+    val brand: String?,
+    val ingredients: String,
+    val nutrition: NutritionDto
+)

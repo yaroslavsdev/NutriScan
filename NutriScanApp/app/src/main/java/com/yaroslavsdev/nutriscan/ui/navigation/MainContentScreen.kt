@@ -96,6 +96,10 @@ fun MainContentScreen(
                     navController = bottomNavController,
                 )
             }
+
+            composable(Screen.AddCustomProductScreen.route) {
+                AddProductScreen(barcode = null, navController = bottomNavController)
+            }
         }
 
         BottomBar(navController = bottomNavController)
