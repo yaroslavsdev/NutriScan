@@ -125,11 +125,14 @@ fun FoodDiaryScreen(
                 Text("Нет записей за этот день")
             }
         } else {
+            val onClickNavigate: (String) -> Unit = {
+                navController.navigate(Screen.ProductScreen.createRoute(it, forViewing = true))
+            }
             LazyColumn {
-                mealSection("Завтрак", state.breakfast)
-                mealSection("Обед", state.lunch)
-                mealSection("Ужин", state.dinner)
-                mealSection("Перекус", state.snack)
+                mealSection("Завтрак", state.breakfast, onClickNavigate)
+                mealSection("Обед", state.lunch, onClickNavigate)
+                mealSection("Ужин", state.dinner, onClickNavigate)
+                mealSection("Перекус", state.snack, onClickNavigate)
             }
         }
     }
@@ -137,7 +140,8 @@ fun FoodDiaryScreen(
 
 private fun androidx.compose.foundation.lazy.LazyListScope.mealSection(
     title: String,
-    entries: List<DiaryItemUi>
+    entries: List<DiaryItemUi>,
+    onItemClicked: (String) -> Unit
 ) {
     if (entries.isEmpty()) return
 
@@ -150,6 +154,6 @@ private fun androidx.compose.foundation.lazy.LazyListScope.mealSection(
     }
 
     items(entries) { entry ->
-        DiaryItemCard(entry)
+        DiaryItemCard(entry, onItemClicked = { onItemClicked(entry.barcode!!) })
     }
 }

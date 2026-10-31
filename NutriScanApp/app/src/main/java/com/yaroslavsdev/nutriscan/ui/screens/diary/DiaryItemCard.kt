@@ -16,11 +16,15 @@ import androidx.compose.ui.unit.dp
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun DiaryItemCard(item: DiaryItemUi) {
+fun DiaryItemCard(
+    item: DiaryItemUi,
+    onItemClicked: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp)
+            .padding(bottom = 8.dp),
+        onClick = onItemClicked
     ) {
         Column(Modifier.padding(12.dp)) {
             Text(

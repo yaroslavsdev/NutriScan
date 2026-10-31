@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class DiaryItemUi(
-    val id: Int,
+    val barcode: String?,
     val productName: String,
     val weightGrams: Float,
     val calories: Float,

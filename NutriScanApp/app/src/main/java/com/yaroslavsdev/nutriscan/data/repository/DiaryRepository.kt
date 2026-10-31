@@ -45,7 +45,7 @@ class DiaryRepository(
 
             fun List<DiaryEntryItemDto>.toUi() = map {
                 DiaryItemUi(
-                    id = it.id,
+                    barcode = it.barcode,
                     productName = it.productName,
                     weightGrams = it.weightGrams,
                     calories = it.calories,

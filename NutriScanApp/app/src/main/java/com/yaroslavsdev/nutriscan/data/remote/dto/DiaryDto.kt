@@ -16,6 +16,7 @@ data class DiaryEntryCreateDto(
 
 data class DiaryEntryItemDto(
     val id: Int,
+    val barcode: String?,
     @SerializedName("product_name")
     val productName: String,
     @SerializedName("weight_grams")
