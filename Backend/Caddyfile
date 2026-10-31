@@ -1,3 +1,7 @@
+{
+    email yaroslav.safronov.09@yandex.ru
+}
+
 yaroslav.safronov.09.fvds.ru {
     reverse_proxy app:8000
 }

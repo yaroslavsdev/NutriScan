@@ -1,4 +1,6 @@
 import json
+import uuid
+
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 
@@ -34,6 +36,32 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=400, detail="Товар с таким штрих-кодом уже есть")
 
+# Добавление товара без штрих-кода
+@router.post("/custom", response_model=ProductResponse)
+def create_custom_product(
+    data: CustomProductCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(dependencies.get_current_user)
+):
+    internal_code = "custom-" + uuid.uuid4().hex[:12]
+
+    product = models.Product(
+        barcode=internal_code,
+        name=data.name,
+        brand=data.brand,
+        ingredients=data.ingredients,
+        calories=data.nutrition.calories,
+        proteins=data.nutrition.proteins,
+        fats=data.nutrition.fats,
+        carbs=data.nutrition.carbs,
+    )
+
+    db.add(product)
+    db.commit()
+    db.refresh(product)
+
+    return product
+
 
 # Получение аллергенов для конкретного пользователя по составу продукта
 def get_matched_allergens(db: Session, ingredients: str, user_id: int) -> list[str]:
@@ -68,7 +96,7 @@ def get_matched_allergens(db: Session, ingredients: str, user_id: int) -> list[s
 def get_product_by_barcode(
     barcode: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(dependencies.get_current_user),
+    current_user: models.User = Depends(dependencies.get_current_user)
 ):
     product = db.query(models.Product).filter(models.Product.barcode == barcode).first()
 
@@ -113,21 +141,3 @@ def get_product_by_barcode(
         carbs=product.carbs,
         matched_allergens=matched_allergens,
     )
-
-
-# Получение списка товаров
-@router.get("", response_model=list[ProductResponse])
-def get_all_products(db: Session = Depends(get_db)):
-    products = db.query(models.Product).all()
-    return products
-
-
-# Удаление товара по штрих-коду
-@router.delete("/{barcode}")
-def delete_product_by_barcode(barcode: str, db: Session = Depends(get_db)):
-    product = db.query(models.Product).filter(models.Product.barcode == barcode).first()
-    if not product:
-        raise HTTPException(status_code=404, detail=f"Товар со штрих-кодом {barcode} не найден")
-    db.delete(product)
-    db.commit()
-    return {"detail": f"Товар с штрих-кодом {barcode} успешно удален"}

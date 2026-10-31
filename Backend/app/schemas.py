@@ -18,6 +18,12 @@ class ProductCreate(BaseModel):
     ingredients: str
     nutrition: Nutrition
 
+class CustomProductCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=200)
+    brand: str | None = None
+    ingredients: str
+    nutrition: Nutrition
+
 class ProductResponse(BaseModel):
     id: int
     barcode: str
