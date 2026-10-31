@@ -1,6 +1,7 @@
 package com.yaroslavsdev.nutriscan.ui.screens.history
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
 
@@ -48,7 +50,10 @@ fun CheckHistoryScreen(
                 EmptyHistory()
             }
             else -> {
-                HistoryList(state)
+                HistoryList(
+                    state,
+                    { barcode -> navController.navigate(Screen.ProductScreen.createRoute(barcode)) }
+                    )
             }
         }
     }
@@ -68,22 +73,22 @@ fun EmptyHistory() {
 
 
 @Composable
-fun HistoryList(state: CheckHistoryUiState) {
+fun HistoryList(state: CheckHistoryUiState, onItemClicked: (String) -> Unit) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         state.grouped.forEach { (date, items) ->
             item {
                 Text(
                     text = date.format(
                         DateTimeFormatter.ofPattern("dd MMMM yyyy")
-                    ),
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    )
                 )
             }
 
             items(items.size) { index ->
-                HistoryCard(items[index])
+                HistoryCard(items[index], { onItemClicked(items[index].barcode) })
             }
         }
     }

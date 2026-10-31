@@ -14,14 +14,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.yaroslavsdev.nutriscan.ui.model.ScannedProductUi
+import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun HistoryCard(item: ScannedProductUi) {
+fun HistoryCard(
+    item: ScannedProductUi,
+    onItemClicked: () -> Unit
+) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 12.dp)
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onItemClicked
     ) {
         Column(Modifier.padding(12.dp)) {
 

@@ -20,7 +20,7 @@ class FoodDiaryViewModel(
     private val _isError = MutableStateFlow(false)
     val isError = _isError.asStateFlow()
 
-    init {
+    fun loadCurrentData() {
         loadDay(LocalDate.now())
     }
 
@@ -33,6 +33,7 @@ class FoodDiaryViewModel(
     }
 
     fun loadDay(date: LocalDate) {
+        loadGoal()
         viewModelScope.launch {
             diaryRepository.getDay(date)
                 .onSuccess {

@@ -12,6 +12,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -42,6 +47,10 @@ fun FoodDiaryScreen(
     val state by viewModel.uiState.collectAsState()
     val isError by viewModel.isError.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadCurrentData()
+    }
+
     LaunchedEffect(isError) {
         if (isError) {
             Toast.makeText(context, "Не удалось загрузить дневник", Toast.LENGTH_SHORT).show()
@@ -55,10 +64,11 @@ fun FoodDiaryScreen(
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            TextButton(onClick = viewModel::previousDay) {
-                Text("<--")
+            IconButton(onClick = viewModel::previousDay) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Предыдущий день")
             }
 
             Text(
@@ -67,17 +77,9 @@ fun FoodDiaryScreen(
                 fontSize = 18.sp
             )
 
-            TextButton(onClick = viewModel::nextDay) {
-                Text("-->")
+            IconButton(onClick = viewModel::nextDay) {
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, "Следующий день")
             }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        val progress = if (state.dailyCalorieGoal == 0) {
-            0f
-        } else {
-            min(1f * state.totalCalories / state.dailyCalorieGoal, 1f)
         }
 
         Spacer(Modifier.height(8.dp))
@@ -86,6 +88,12 @@ fun FoodDiaryScreen(
             text = "${state.totalCalories.toInt()} / ${state.dailyCalorieGoal} ккал",
             fontSize = 16.sp
         )
+
+        val progress = if (state.dailyCalorieGoal == 0) {
+            0f
+        } else {
+            min(1f * state.totalCalories / state.dailyCalorieGoal, 1f)
+        }
 
         LinearProgressIndicator(
             progress = { progress },
@@ -108,8 +116,6 @@ fun FoodDiaryScreen(
         ) {
             Text("Статистика БЖУ")
         }
-
-        Spacer(Modifier.height(8.dp))
 
         if (state.items.isEmpty()) {
             Box(
