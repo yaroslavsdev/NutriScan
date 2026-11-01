@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SECRET_KEY: ci-test-key
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
