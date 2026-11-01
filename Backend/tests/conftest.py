@@ -22,6 +22,33 @@ def db_session():
 
 
 @pytest.fixture
+def client():
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool
+    )
+    Base.metadata.create_all(engine)
+    test_session = sessionmaker(bind=engine)
+
+    def override_get_db():
+        db = test_session()
+        try:
+            yield db
+        finally:
+            db.close()
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    test_client = TestClient(app)
+    test_client.db_factory = test_session
+
+    yield test_client
+
+    app.dependency_overrides.clear()
+
+
+@pytest.fixture
 def user_with_gluten(db_session):
     user = models.User(username="test", email="test@mail.ru", password_hash="X")
     allergen = models.Allergen(name="gluten")
@@ -66,33 +93,6 @@ def user_with_2_allergens(db_session):
 
     db_session.commit()
     return user
-
-
-@pytest.fixture
-def client():
-    engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool
-    )
-    Base.metadata.create_all(engine)
-    test_session = sessionmaker(bind=engine)
-
-    def override_get_db():
-        db = test_session()
-        try:
-            yield db
-        finally:
-            db.close()
-
-    app.dependency_overrides[get_db] = override_get_db
-
-    test_client = TestClient(app)
-    test_client.db_factory = test_session
-
-    yield test_client
-
-    app.dependency_overrides.clear()
 
 
 @pytest.fixture
