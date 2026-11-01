@@ -65,6 +65,7 @@ def issue_tokens(db: Session, user: models.User) -> dict:
     }
 
 
+# Обновить токены
 @router.post("/refresh", response_model=schemas.Token)
 def refresh(data: schemas.RefreshRequest, db: Session = Depends(database.get_db)):
     token_hash = auth_utils.hash_token(data.refresh_token)
@@ -73,7 +74,11 @@ def refresh(data: schemas.RefreshRequest, db: Session = Depends(database.get_db)
         models.RefreshToken.token_hash == token_hash
     ).first()
 
-    if not saved or saved.expires_at < datetime.now(timezone.utc):
+    expires_at = saved.expires_at
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+
+    if not saved or expires_at < datetime.now(timezone.utc):
         raise HTTPException(status_code=401, detail="Недействительный refresh-токен")
 
     user = db.query(models.User).filter(models.User.id == saved.user_id).first()

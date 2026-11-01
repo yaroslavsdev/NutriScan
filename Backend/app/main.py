@@ -4,10 +4,11 @@ from app.database import SessionLocal
 from app.update_allergen_triggers import update_allergen_triggers
 
 db = SessionLocal()
-try:
-    update_allergen_triggers(db)
-finally:
-    db.close()
+if __name__ == "__main__":
+    try:
+        update_allergen_triggers(db)
+    finally:
+        db.close()
 
 app = FastAPI(
     title="NutriScan API",

@@ -26,11 +26,16 @@ def test_allergens_of_other_user_are_ignored(db_session, user_with_gluten, other
     result = get_matched_allergens(db_session, "мука, глютен", other_user.id)
     assert result == []
 
+def test_user_with_2_allergens_has_2_matches(db_session, user_with_2_allergens):
+    result = get_matched_allergens(db_session, "мука, глютен, яйца", user_with_2_allergens.id)
+    result.sort()
+    assert result == ["eggs", "gluten"]
+
 @pytest.mark.parametrize(
     ("ingredients", "target"),
     [("Безглютеновая мука", []),
     ("Не содержит подсолнечное масло. Может содержать следы глютена.", ['gluten'])]
 )
-def test_trigger_inside_word(db_session, user_with_gluten, ingredients: str, target: bool):
+def test_triggers(db_session, user_with_gluten, ingredients: str, target: bool):
     result = get_matched_allergens(db_session, ingredients, user_with_gluten.id)
     assert result == target
