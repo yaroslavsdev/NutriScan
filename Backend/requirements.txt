@@ -9,5 +9,3 @@ bcrypt
 python-jose[cryptography]
 python-multipart
 alembic
-httpx
-pytest
