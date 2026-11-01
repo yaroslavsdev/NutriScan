@@ -33,6 +33,14 @@ fun DiaryItemCard(
                 style = MaterialTheme.typography.titleMedium
             )
 
+            if (item.barcode != null) {
+                Text(
+                    text = if (item.barcode.startsWith("custom-")) "Добавленный продукт" else "Штрих-код: ${item.barcode}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+            }
+
             Text("${item.weightGrams.toInt()} г, ${item.calories.toInt()} ккал")
 
             Spacer(Modifier.height(8.dp))
