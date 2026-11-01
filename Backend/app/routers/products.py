@@ -91,6 +91,7 @@ def get_matched_allergens(db: Session, ingredients: str, user_id: int) -> list[s
     return list(matched)
 
 
+# Сохранение скана в истории
 def save_scan(db: Session, user_id: int, barcode: str, product):
     db.add(models.ScanHistory(
         user_id=user_id,

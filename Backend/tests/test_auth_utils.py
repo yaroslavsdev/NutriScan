@@ -11,6 +11,7 @@ from app.auth_utils import (
     verify_password,
 )
 
+
 @pytest.mark.parametrize("password", ["pass!", "Qwerty12345", "2026"])
 def test_hash_password(password: str):
     hashed_password = hash_password(password)
