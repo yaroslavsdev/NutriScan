@@ -4,13 +4,24 @@ import android.content.Context
 import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import java.io.File
 
 class TokenManager(context: Context) {
     private val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
 
-    private val prefs = EncryptedSharedPreferences.create(
+    private val prefs = try {
+        createEncryptedPrefs(context)
+    } catch (e: Exception) {
+        val sharedPrefsFile = File(context.filesDir?.parent + "/shared_prefs/secret_shared_prefs.xml")
+        if (sharedPrefsFile.exists()) {
+            sharedPrefsFile.delete()
+        }
+        createEncryptedPrefs(context)
+    }
+
+    private fun createEncryptedPrefs(context: Context) = EncryptedSharedPreferences.create(
         context,
         "secret_shared_prefs",
         masterKey,

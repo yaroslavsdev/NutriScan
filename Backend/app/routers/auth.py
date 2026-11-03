@@ -74,11 +74,14 @@ def refresh(data: schemas.RefreshRequest, db: Session = Depends(database.get_db)
         models.RefreshToken.token_hash == token_hash
     ).first()
 
+    if not saved:
+        raise HTTPException(status_code=401, detail="Недействительный refresh-токен")
+
     expires_at = saved.expires_at
     if expires_at.tzinfo is None:
         expires_at = expires_at.replace(tzinfo=timezone.utc)
 
-    if not saved or expires_at < datetime.now(timezone.utc):
+    if expires_at < datetime.now(timezone.utc):
         raise HTTPException(status_code=401, detail="Недействительный refresh-токен")
 
     user = db.query(models.User).filter(models.User.id == saved.user_id).first()

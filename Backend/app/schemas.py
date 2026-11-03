@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime, date as date_type
 
-MEAL_TYPES = ["breakfast", "lunch", "dinner", "snack"]
 
 class Nutrition(BaseModel):
     calories: float
@@ -89,6 +88,7 @@ class NutritionUpdate(BaseModel):
 
 
 # Дневник питания
+MEAL_TYPES = ["breakfast", "lunch", "dinner", "snack"]
 class DiaryEntryCreate(BaseModel):
     barcode: str
     meal_type: str
