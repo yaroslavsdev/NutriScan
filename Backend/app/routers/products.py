@@ -13,7 +13,11 @@ router = APIRouter(prefix="/products", tags=["Products"])
 
 # Добавление товара в базу
 @router.post("", response_model=ProductResponse)
-def create_product(product: ProductCreate, db: Session = Depends(get_db)):
+def create_product(
+    product: ProductCreate,
+    db: Session = Depends(get_db),
+    _: models.User = Depends(dependencies.get_current_user)
+):
     db_product = models.Product(
         barcode=product.barcode,
         name=product.name,
