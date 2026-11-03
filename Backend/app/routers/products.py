@@ -41,7 +41,7 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
 def create_custom_product(
     data: CustomProductCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(dependencies.get_current_user)
+    _: models.User = Depends(dependencies.get_current_user)
 ):
     internal_code = "custom-" + uuid.uuid4().hex[:12]
 

@@ -30,7 +30,7 @@ def register(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
 # Авторизация пользователя
 @router.post("/login", response_model=schemas.Token)
 def login(user: schemas.UserLogin, db: Session = Depends(database.get_db)):
-    db_user = db.query(models.User).filter(models.User.email == user.email).first()
+    db_user: models.User | None = db.query(models.User).filter(models.User.email == user.email).first()
     if not db_user or not auth_utils.verify_password(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Неверный email или пароль")
 
@@ -84,14 +84,14 @@ def refresh(data: schemas.RefreshRequest, db: Session = Depends(database.get_db)
     if expires_at < datetime.now(timezone.utc):
         raise HTTPException(status_code=401, detail="Недействительный refresh-токен")
 
-    user = db.query(models.User).filter(models.User.id == saved.user_id).first()
-    if not user:
+    db_user: models.User | None = db.query(models.User).filter(models.User.id == saved.user_id).first()
+    if not db_user:
         raise HTTPException(status_code=401, detail="Пользователь не найден")
 
     db.delete(saved)
     db.commit()
 
-    return issue_tokens(db, user)
+    return issue_tokens(db, db_user)
 
 
 # Выход из профиля

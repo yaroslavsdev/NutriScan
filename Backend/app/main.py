@@ -6,7 +6,7 @@ from app.database import SessionLocal
 from app.update_allergen_triggers import update_allergen_triggers
 
 @asynccontextmanager
-async def lifespan(application: FastAPI):
+async def lifespan(_: FastAPI):
     db = SessionLocal()
     try:
         update_allergen_triggers(db)

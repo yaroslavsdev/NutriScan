@@ -49,6 +49,37 @@ def client():
 
 
 @pytest.fixture
+def auth_headers(client):
+    response = client.post("/auth/register", json={
+        "username": "simple_user",
+        "email": "simple_user@mail.ru",
+        "password": "test1234",
+    })
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def product(client):
+    db = client.db_factory()
+    item = models.Product(
+        barcode="4600000000001",
+        name="Молоко",
+        brand="Бренд",
+        ingredients="Молоко",
+        calories=67.0,
+        proteins=3.0,
+        fats=4.0,
+        carbs=5.5,
+    )
+    db.add(item)
+    db.commit()
+    db.refresh(item)
+    db.close()
+    return item
+
+
+@pytest.fixture
 def user_with_gluten(db_session):
     user = models.User(username="test", email="test@mail.ru", password_hash="X")
     allergen = models.Allergen(name="gluten")
@@ -93,34 +124,3 @@ def user_with_2_allergens(db_session):
 
     db_session.commit()
     return user
-
-
-@pytest.fixture
-def auth_headers(client):
-    response = client.post("/auth/register", json={
-        "username": "simple_user",
-        "email": "simple_user@mail.ru",
-        "password": "test1234",
-    })
-    token = response.json()["access_token"]
-    return {"Authorization": f"Bearer {token}"}
-
-
-@pytest.fixture
-def product(client):
-    db = client.db_factory()
-    item = models.Product(
-        barcode="4600000000001",
-        name="Молоко",
-        brand="TestBrand",
-        ingredients="Молоко",
-        calories=67.0,
-        proteins=3.0,
-        fats=4.0,
-        carbs=5.5,
-    )
-    db.add(item)
-    db.commit()
-    db.refresh(item)
-    db.close()
-    return item
