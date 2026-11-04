@@ -1,12 +1,17 @@
 name: Build and Sign NutriScan APK
 
 on:
-  push:
-    branches:
+  workflow_run:
+    workflows: 
+      - "CI"
+    branches: 
       - main
+    types: 
+      - completed
 
 jobs:
   build:
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     defaults:
       run:
