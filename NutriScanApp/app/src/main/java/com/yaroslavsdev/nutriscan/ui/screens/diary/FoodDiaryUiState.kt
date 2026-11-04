@@ -26,8 +26,10 @@ data class FoodDiaryUiState(
     val dinner: List<DiaryItemUi> = emptyList(),
     val snack: List<DiaryItemUi> = emptyList()
 ) {
-    val items: List<DiaryItemUi>
-        get() = breakfast + lunch + dinner + snack
-    val totalWeight: Float
-        get() = items.sumOf { it.weightGrams.toDouble() }.toFloat()
+    fun items(): List<DiaryItemUi> {
+        return breakfast + lunch + dinner + snack
+    }
+    fun totalWeight(): Float {
+        return items().sumOf { it.weightGrams.toDouble() }.toFloat()
+    }
 }

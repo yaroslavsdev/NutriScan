@@ -21,7 +21,6 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -97,9 +96,8 @@ fun FoodDiaryScreen(
 
         LinearProgressIndicator(
             progress = { progress },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(12.dp)
+            modifier = Modifier.fillMaxWidth().height(6.dp),
+            gapSize = 0.dp
         )
 
         Spacer(Modifier.height(12.dp))
@@ -109,7 +107,7 @@ fun FoodDiaryScreen(
                 proteins = state.totalProteins,
                 fats = state.totalFats,
                 carbs = state.totalCarbs,
-                totalWeight = state.totalWeight
+                totalWeight = state.totalWeight()
             )) },
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.large
@@ -117,7 +115,7 @@ fun FoodDiaryScreen(
             Text("Статистика БЖУ")
         }
 
-        if (state.items.isEmpty()) {
+        if (state.items().isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
