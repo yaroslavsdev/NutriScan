@@ -6,7 +6,6 @@ import com.yaroslavsdev.nutriscan.data.repository.ProductsRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -20,7 +19,7 @@ class ProductsRepositoryTest {
     private val repository = ProductsRepository(api)
 
     private fun makeHttpError(code: Int): HttpException {
-        val body = "".toResponseBody("text/plain".toMediaType())
+        val body = "".toResponseBody(null)
         return HttpException(Response.error<Any>(code, body))
     }
 

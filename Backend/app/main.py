@@ -5,6 +5,7 @@ from app.routers import auth, diary, history, products
 from app.database import SessionLocal
 from app.update_allergen_triggers import update_allergen_triggers
 
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     db = SessionLocal()
@@ -13,6 +14,7 @@ async def lifespan(_: FastAPI):
     finally:
         db.close()
     yield
+
 
 app = FastAPI(
     title="NutriScan API",
