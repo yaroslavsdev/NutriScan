@@ -58,8 +58,7 @@ fun FoodDiaryScreen(
     }
 
     Column(
-        modifier = Modifier
-            .padding(horizontal = 10.dp)
+        modifier = Modifier.padding(horizontal = 10.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,

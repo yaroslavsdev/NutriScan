@@ -3,11 +3,19 @@ package com.yaroslavsdev.nutriscan.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -17,10 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
+import com.yaroslavsdev.nutriscan.R
 import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import com.yaroslavsdev.nutriscan.ui.screens.scan.ManualBarcodeDialog
 
@@ -29,9 +39,8 @@ fun HomeScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 12.dp),
+            .padding(horizontal = 20.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         fun safeNavigate(route: String) {
             val entry = navController.currentBackStackEntry
@@ -42,26 +51,64 @@ fun HomeScreen(navController: NavHostController) {
 
         var showManualDialog by remember { mutableStateOf(false) }
 
-        Text("Проверьте продукт, нажав кнопку")
+        Text(
+            text = "Проверка продукта",
+            style = MaterialTheme.typography.headlineMedium,
+            textAlign = TextAlign.Center
+        )
+
+        Text(
+            text = "Отсканируйте штрих-код или введите его вручную",
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 8.dp, bottom = 32.dp)
+        )
 
         Button(
             onClick = { safeNavigate(Screen.ScannerScreen.route) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .height(56.dp),
             shape = MaterialTheme.shapes.large
         ) {
-            Text("Сканировать товар")
+            Icon(
+                painter = painterResource(id = R.drawable.ic_camera),
+                contentDescription = "Сканировать товар",
+                modifier = Modifier.padding(end = 8.dp).size(20.dp)
+            )
+            Text("Сканировать товар", style = MaterialTheme.typography.titleMedium)
         }
 
-        Button(
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedButton(
             onClick = { showManualDialog = true },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .height(56.dp),
             shape = MaterialTheme.shapes.large
         ) {
-            Text("Ввести штрих-код вручную")
+            Icon(
+                imageVector = Icons.Rounded.Edit,
+                contentDescription = "Ручной ввод кода",
+                modifier = Modifier.padding(end = 8.dp).size(20.dp)
+            )
+            Text("Ввести код вручную", style = MaterialTheme.typography.titleMedium)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(
+            onClick = { safeNavigate(Screen.AddCustomProductScreen.route) },
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.Add,
+                contentDescription = null,
+                modifier = Modifier.padding(end = 8.dp).size(20.dp)
+            )
+            Text("Товар без штрих-кода")
         }
 
         if (showManualDialog) {
@@ -72,16 +119,6 @@ fun HomeScreen(navController: NavHostController) {
                     navController.navigate(Screen.ProductScreen.createRoute(code))
                 }
             )
-        }
-
-        Button(
-            onClick = { safeNavigate(Screen.AddCustomProductScreen.route) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            shape = MaterialTheme.shapes.large
-        ) {
-            Text("Товар без штрих-кода")
         }
     }
 }
