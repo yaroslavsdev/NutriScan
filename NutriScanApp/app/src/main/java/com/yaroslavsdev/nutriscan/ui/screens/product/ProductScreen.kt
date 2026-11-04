@@ -30,12 +30,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.yaroslavsdev.nutriscan.ui.components.ProductInfoCard
 import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import com.yaroslavsdev.nutriscan.ui.screens.addToDiary.AddToDiaryDialog
-import com.yaroslavsdev.nutriscan.ui.screens.product.ProductState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -132,7 +132,7 @@ fun ProductScreen(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("Продукт не найден в базе, но вы можете добавить информацию о нём")
+                        Text(text = "Продукт не найден в базе, но вы можете добавить информацию о нём", textAlign = TextAlign.Center)
 
                         Spacer(Modifier.height(12.dp))
 
