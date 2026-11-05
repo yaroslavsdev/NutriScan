@@ -70,7 +70,7 @@ fun EmptyHistory() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(top = 26.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("История проверок пуста")

@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,12 +36,13 @@ import androidx.navigation.NavController
 import com.yaroslavsdev.nutriscan.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
-private fun String.toNutritionFloat(): Float? {
-    val value = trim()
-        .replace(',', '.')
-        .toFloatOrNull()
-
-    if (value == null || value < 0f) {
+private fun String.toNutritionFloat(maxValue: Float = 100f): Float? {
+    val text = trim().replace(',', '.')
+    if (text.isEmpty() || text.endsWith(".")) {
+        return null
+    }
+    val value = text.toFloatOrNull()
+    if (value == null || value < 0f || value > maxValue) {
         return null
     }
 
@@ -77,10 +79,10 @@ fun AddProductScreen(
     val isNameValid = name.isNotBlank()
     val isIngredientsValid = ingredients.isNotBlank()
 
-    val isCaloriesValid = calories.toNutritionFloat() != null
-    val isProteinsValid = proteins.toNutritionFloat() != null
-    val isFatsValid = fats.toNutritionFloat() != null
-    val isCarbsValid = carbs.toNutritionFloat() != null
+    val isCaloriesValid = calories.toNutritionFloat(1500f) != null
+    val isProteinsValid = proteins.toNutritionFloat(100f) != null
+    val isFatsValid = fats.toNutritionFloat(100f) != null
+    val isCarbsValid = carbs.toNutritionFloat(100f) != null
 
     val isFormValid = isNameValid && isIngredientsValid
             && isCaloriesValid && isProteinsValid && isFatsValid && isCarbsValid
@@ -120,6 +122,8 @@ fun AddProductScreen(
                 supportingText = {
                     if (showErrors && !isNameValid) Text("Название не может быть пустым")
                 },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -128,6 +132,8 @@ fun AddProductScreen(
                 onValueChange = { brand = it },
                 label = { Text("Бренд (необязательно)") },
                 supportingText = { },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -140,6 +146,8 @@ fun AddProductScreen(
                 supportingText = {
                     if (showErrors && !isIngredientsValid) Text("Укажите состав продукта")
                 },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -156,9 +164,10 @@ fun AddProductScreen(
                 label = { Text("Калории (на 100г)") },
                 isError = showErrors && !isCaloriesValid,
                 supportingText = {
-                    if (showErrors && !isCaloriesValid) Text("Введите число")
+                    if (showErrors && !isCaloriesValid) Text("Введите число от 0 до 1500")
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -175,9 +184,10 @@ fun AddProductScreen(
                 label = { Text("Белки (на 100г)") },
                 isError = showErrors && !isProteinsValid,
                 supportingText = {
-                    if (showErrors && !isProteinsValid) Text("Введите число")
+                    if (showErrors && !isProteinsValid) Text("Введите число от 0 до 100")
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -194,9 +204,10 @@ fun AddProductScreen(
                 label = { Text("Жиры (на 100г)") },
                 isError = showErrors && !isFatsValid,
                 supportingText = {
-                    if (showErrors && !isFatsValid) Text("Введите число")
+                    if (showErrors && !isFatsValid) Text("Введите число от 0 до 100")
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -213,9 +224,13 @@ fun AddProductScreen(
                 label = { Text("Углеводы (на 100г)") },
                 isError = showErrors && !isCarbsValid,
                 supportingText = {
-                    if (showErrors && !isCarbsValid) Text("Введите число")
+                    if (showErrors && !isCarbsValid) Text("Введите число от 0 до 100")
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Done
+                ),
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -227,10 +242,10 @@ fun AddProductScreen(
                             name = name,
                             brand = brand,
                             ingredients = ingredients,
-                            calories = calories.toNutritionFloat()!!,
-                            proteins = proteins.toNutritionFloat()!!,
-                            fats = fats.toNutritionFloat()!!,
-                            carbs = carbs.toNutritionFloat()!!,
+                            calories = calories.toNutritionFloat(1500f)!!,
+                            proteins = proteins.toNutritionFloat(100f)!!,
+                            fats = fats.toNutritionFloat(100f)!!,
+                            carbs = carbs.toNutritionFloat(100f)!!,
                             onSuccess = { savedBarcode ->
                                 navController.navigate(Screen.ProductScreen.createRoute(savedBarcode)) {
                                     if (barcode != null) {
